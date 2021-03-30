@@ -25,7 +25,10 @@
     - Logo;
     - Áreas de conteúdo;
     - Tabelas;
+    - Scrollbar;
     - Outros.
+
+    /!\ Tudo que tenha router-link tem de ser estilizado atravês do nome da classe + a /!\
 */
 /* Fundo das páginas */ 
   html, body, #app, .container-autenticacao-registo, .view {
@@ -60,6 +63,7 @@
   .padding-l8 {padding-left: 8px;}
   .padding-all4 {padding: 4px 4px;}
   .padding-all8 {padding: 8px 8px;}
+  .padding-all12 {padding: 12px 12px;}
   .sem-padding {padding: 0px !important;}
 /* Paleta de cores */
   /* Fundos */ 
@@ -202,6 +206,11 @@
   .tabela {width: 100%; border-radius: 5px; border-collapse: collapse; overflow: hidden;}
   th {background-color: #d2d2d2; font-family: mukta-light; font-size: 14px; border: 1px solid #707070; height: 36px;}
   td {background-color: #f4f4f4; font-family: opensans-light; font-size: 12px; border: 1px solid #707070; height: 36px;}
+/* Scrollbar */
+::-webkit-scrollbar {width: 10px;}
+::-webkit-scrollbar-track {background: #dddddd; border-radius: 3px; padding-right: 3px;}
+::-webkit-scrollbar-thumb {background: #808080; border-radius: 3px;}
+::-webkit-scrollbar-thumb:hover {background: #606060;}
 /* Outros */
   * {outline: none;}
   button:focus {outline: none;}

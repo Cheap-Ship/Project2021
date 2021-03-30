@@ -7,7 +7,7 @@ import Propostas from "../views/Propostas.vue";
 import Gestao from "../views/Gestao.vue";
 import Agenda from "../views/Agenda.vue";
 import Perfil from "../views/Perfil.vue";
-import GestaoPropostas from "../views/propostas/GestaoPropostas.vue";
+import GerirPropostas from "../views/propostas/GestaoPropostas.vue";
 import CriarProposta from "../views/propostas/CriarProposta.vue";
 import Aprovacoes from "../views/gestao/Aprovacoes.vue";
 import Utilizadores from "../views/gestao/Utilizadores.vue";
@@ -22,25 +22,32 @@ const routes = [{
     path: "/",
     name: "Index",
     component: Index,
-    meta:{
-      requerAutenticacao: true
+    meta: {
+      requerAutenticacao: true,
+      redirecionarUtilizadorAtivo: true
     }
   },
   {
     path: "/autenticacao",
     name: "Autenticacao",
-    component: Autenticacao
+    component: Autenticacao,
+    meta: {
+      redirecionarUtilizadorAtivo: true
+    }
   },
   {
     path: "/registo",
     name: "Registo",
-    component: Registo
+    component: Registo,
+    meta: {
+      redirecionarUtilizadorAtivo: true
+    }
   },
   {
     path: "/propostas",
     name: "Propostas",
     component: Propostas,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -48,7 +55,7 @@ const routes = [{
     path: "/gestao",
     name: "Gestao",
     component: Gestao,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -56,7 +63,7 @@ const routes = [{
     path: "/agenda",
     name: "Agenda",
     component: Agenda,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -64,15 +71,16 @@ const routes = [{
     path: "/perfil",
     name: "Perfil",
     component: Perfil,
-    meta:{
-      requerAutenticacao: true
+    meta: {
+      requerAutenticacao: true,
+      redirecionarDesconexao: true
     }
   },
   {
     path: "/propostas/gestao",
-    name: "GestaoP",
-    component: GestaoPropostas,
-    meta:{
+    name: "GerirPropostas",
+    component: GerirPropostas,
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -80,7 +88,7 @@ const routes = [{
     path: "/propostas/criar",
     name: "CriarProposta",
     component: CriarProposta,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -88,7 +96,7 @@ const routes = [{
     path: "/gestao/aprovacoes",
     name: "Aprovacoes",
     component: Aprovacoes,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -96,7 +104,7 @@ const routes = [{
     path: "/gestao/utilizadores",
     name: "Utilizadores",
     component: Utilizadores,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -104,7 +112,7 @@ const routes = [{
     path: "/gestao/incricoes",
     name: "Inscricoes",
     component: Inscricoes,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -112,7 +120,7 @@ const routes = [{
     path: "/gestao/adicionardocentes",
     name: "AdicionarDocentes",
     component: AdicionarDocentes,
-    meta:{
+    meta: {
       requerAutenticacao: true
     }
   },
@@ -129,11 +137,17 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) =>{
-  if(to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado){
-    next({name: 'Autenticacao'})
+router.beforeEach((to, from, next) => {
+  if(to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado){
+    next({name: 'Propostas'});
   }
-  else{
+  else {
+    next();
+  }
+  if(to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado){
+    next({name: 'Autenticacao'});
+  }
+  else {
     next();
   }
 });
