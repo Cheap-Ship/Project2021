@@ -16,6 +16,7 @@
     - Paddings;
     - Paleta de cores;
     - Fontes de texto e tamanhos;
+    - Larguras;
     - Bordas;
     - Sombras;
     - Checkboxes;
@@ -34,9 +35,11 @@
   html, body, #app, .container-autenticacao-registo, .view {
     height: 100%; 
     background-color: #e7e7e7; 
+    text-align: center; 
+  }
+  .container-autenticacao-registo {
     min-height: 754px; /* Alterar mais tarde */ 
     min-width: 400px; /* Alterar mais tarde */
-    text-align: center; 
   }
 /* Margens */
   .sem-margens {margin: 0px;}
@@ -50,6 +53,7 @@
   .margem-t32 {margin-top: 32px;}
   .margem-b10 {margin-bottom: 10px;}
   .margem-b20 {margin-bottom: 20px;}
+  .margem-b26 {margin-bottom: 26px;}
   .margem-b30 {margin-bottom: 30px;}
   .margem-x5 {margin: 0px 5px;}
   .margem-x10 {margin: 0px 10px;}
@@ -97,20 +101,15 @@
   .cor-ffdcdc {color: #ffdcdc;}
 /* Fontes de texto e tamanhos */
   /* Fontes */
-  @font-face {font-family: mukta-extralight; src: url(assets/fonts/Mukta-ExtraLight.woff2);}
-  .mukta-el {font-family: mukta-extralight;}
-  @font-face {font-family: mukta-light; src: url(assets/fonts/Mukta-Light.woff2);}
-  .mukta-l {font-family: mukta-light;}
-  @font-face {font-family: mukta-medium; src: url(assets/fonts/Mukta-Medium.woff2);}
-  .mukta-m {font-family: mukta-medium;}
-  @font-face {font-family: mukta-regular; src: url(assets/fonts/Mukta-Regular.woff2);}
-  .mukta-r {font-family: mukta-regular;}
-  @font-face {font-family: mukta-semibold; src: url(assets/fonts/Mukta-SemiBold.woff2);}
-  .mukta-sb {font-family: mukta-semibold;}
-  @font-face {font-family: opensans-light; src: url(assets/fonts/OpenSans-Light.woff2);}
-  .opensans-l {font-family: opensans-light;}
-  @font-face {font-family: opensans-semibold; src: url(assets/fonts/OpenSans-SemiBold.woff2);}
-  .opensans-sb {font-family: opensans-semibold;}
+  @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600&display=swap');
+  .mukta-el {font-family: 'Mukta', sans-serif; font-weight: 200;}
+  .mukta-l {font-family: 'Mukta', sans-serif; font-weight: 300;}
+  .mukta-r {font-family: 'Mukta', sans-serif; font-weight: 400;}
+  .mukta-m {font-family: 'Mukta', sans-serif; font-weight: 500;}
+  .mukta-sb {font-family: 'Mukta', sans-serif; font-weight: 600;}
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap');
+  .opensans-l {font-family: 'Open Sans', sans-serif; font-weight: 300;}
+  .opensans-sb {font-family: 'Open Sans', sans-serif; font-weight: 600;}
   /* Tamanhos */
   .fonte-10 {font-size: 10px;}
   .fonte-12 {font-size: 12px;}
@@ -122,7 +121,13 @@
   .align-left {text-align: left;}
   /* Bold */
   .texto-bold {font-weight: 500;}
-  /* Width */
+  /* Height */
+  .height-2 {height: 2px !important;}
+  .height-42 {height: 42px !important;}
+  .height-165 {height: 165px !important;}
+  /* Placeholder */
+  ::placeholder {font-size: 12px;}
+/* Larguras */
   .width-25 {width: 25%;}
   .width-30 {width: 30%;}
   .width-35 {width: 35%;}
@@ -132,12 +137,6 @@
   .width-50 {width: 50%;}
   .width-55 {width: 55%;}
   .width-100 {width: 100% !important;}
-  /* Height */
-  .height-2 {height: 2px !important;}
-  .height-42 {height: 42px !important;}
-  .height-165 {height: 165px !important;}
-  /* Placeholder */
-  ::placeholder {font-size: 12px;}
 /* Bordas */
   /* Estilo e espessura*/ 
   .borda-fina {border: 0.5px solid;}
@@ -207,10 +206,10 @@
   th {background-color: #d2d2d2; font-family: mukta-light; font-size: 14px; border: 1px solid #707070; height: 36px;}
   td {background-color: #f4f4f4; font-family: opensans-light; font-size: 12px; border: 1px solid #707070; height: 36px;}
 /* Scrollbar */
-::-webkit-scrollbar {width: 10px;}
-::-webkit-scrollbar-track {background: #dddddd; border-radius: 3px; padding-right: 3px;}
-::-webkit-scrollbar-thumb {background: #808080; border-radius: 3px;}
-::-webkit-scrollbar-thumb:hover {background: #606060;}
+  ::-webkit-scrollbar {width: 10px;}
+  ::-webkit-scrollbar-track {background: #eeeeee; border-radius: 5px; padding-right: 3px;}
+  ::-webkit-scrollbar-thumb {background: rgba(128, 128, 128, 0.5); border-radius: 5px; border: 2px solid #eeeeee;}
+  ::-webkit-scrollbar-thumb:hover {background: rgba(112, 112, 112, 0.5);}
 /* Outros */
   * {outline: none;}
   button:focus {outline: none;}
@@ -224,5 +223,4 @@
   /* Link de Autenticação -> Registo e vice-versa */
   .link-autenticao-registo a {color: #606060;}
   .link-autenticao-registo a:hover {color: #0084c0;}
-
 </style>
