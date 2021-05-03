@@ -57,7 +57,7 @@
           this.$router.push({name: 'Propostas'});
         }
         catch(error) {
-          alert(error)                                     
+          alert("Por favor, insira os dados corretamente.")                                     
         }
       },
       mostrar() {
