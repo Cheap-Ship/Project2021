@@ -15,9 +15,9 @@
           <div class="ver-helper d-flex justify-content-end sem-margens">
           <svg @click="mostrar" class="ver cursor-pointer sem-margens" xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24"><path d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 7.449-11.985 7.449c-7.18 0-12.015-7.449-12.015-7.449s4.446-6.551 12.015-6.551c7.694 0 11.985 6.551 11.985 6.551zm-7 .449c0-2.761-2.238-5-5-5-2.761 0-5 2.239-5 5 0 2.762 2.239 5 5 5 2.762 0 5-2.238 5-5z"/></svg>
           </div>
+          <!-- Erro aqui -->
           <label class="d-flex justify-content-start cor-20 fonte-14 mukta-m sem-margens margem-l5 margem-t7" for="tipo-utilizador">Tipo de utilizador</label>
-          <b-select class="b-selecionar-tipo-utilizador" name="tipo-utilizador" v-model="utilizador.tipo_utilizador" :options="$store.getters.obterTipoUtilizadores" @change="clear" required="required"></b-select>
-          <!-- -->
+          <b-select class="b-selecionar-tipo-utilizador" name="tipo-utilizador" v-model="utilizador.tipo_utilizador" :options="$store.getters.obterTipoUtilizador" required="required"></b-select>
           <div v-if="utilizador.tipo_utilizador==2">
             <label class="d-flex justify-content-start cor-20 fonte-14 mukta-m sem-margens margem-l5 margem-t7" for="numero-estudante">Dados da empresa</label>
             <div class="preencher-dados-empresa d-flex justify-content-center align-items-center cor-60 fundo-fa fonte-12 opensans-l borda-r5 sem-margens" v-b-modal.dados-empresa>Clique para preencher os dados</div>
