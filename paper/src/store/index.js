@@ -254,14 +254,6 @@ export default new Vuex.Store({
         ano_letivo: ""
       }
     ],
-    prazos: [
-      {
-        id_prazo: 0,
-        ano_letivo: "",
-        prazo: "",
-        data_hora: ""
-      }
-    ],
     notificacoes: localStorage.getItem('notificacoes') ? JSON.parse(localStorage.getItem('notificacoes')) : [],
     temas: [
       {id_tema: 0, tema: "Inscrição"},
