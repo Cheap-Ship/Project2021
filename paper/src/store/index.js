@@ -285,6 +285,14 @@ export default new Vuex.Store({
       state.inscricoes[state.inscricoes.length - 1].id_inscricao + 1
       : 0;
     },
+    obterTipoUtilizador: (state) => {
+      const ops = []
+      const len = state.tipo_utilizadores.length;
+      for (let i = 1; i < len; i++) {
+        ops.push({value: state.tipo_utilizadores[i].id, text: state.tipo_utilizadores[i].tipo})
+      }
+      return ops;
+    },
     obterTipoUtilizadorePorId: (state) => (id) => {
       return state.tipo_utilizadores.find(tu => id == tu.id).tipo
     },
