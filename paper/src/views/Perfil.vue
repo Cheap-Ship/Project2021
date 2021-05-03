@@ -54,7 +54,7 @@
                       </div>
                     </div>
                     <div class="area-desconectar">
-                      <router-link @click.native="desconectar" :to="{name:'Autenticacao'}" class="texto-desconectar fonte-16 opensans-sb"><div class="botao-desconectar d-flex align-items-center">Desconectar</div></router-link>
+                      <button @click="desconectar" class="texto-desconectar fonte-16 opensans-sb"><div class="botao-desconectar d-flex align-items-center">Desconectar</div></button>
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,8 @@ export default {
   },
   methods:{
     desconectar(){
-      this.$store.dispatch("desconectar")
+      this.$store.dispatch("desconectar"),
+      window.location.reload()
     },
     anular(){
       this.passe_atual = "",
