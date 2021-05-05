@@ -139,7 +139,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado){
-    next({name: 'Propostas'});
+    if(from.name == "Perfil"){
+      next({name: 'Autenticacao'})
+    } else {
+      next({name: 'Propostas'});
+    }
   }
   else {
     next();

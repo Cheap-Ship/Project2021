@@ -1,5 +1,5 @@
 <template>
-  <div class="container-autenticacao-registo d-flex justify-content-center align-items-center">
+  <div class="container-registo d-flex justify-content-center align-items-center">
     <div class="registo animacao-opacidade-sombra-forte fundo-dd borda-fina borda-70 borda-r10 sombra-forte">
       <div class="container-formulario-autenticacao-registo">
         <form @submit.prevent="registo">
@@ -54,12 +54,16 @@
 </template>
 <style>
 /* Estilização específica a esta página: */
+  .container-registo {min-height: 713px; min-width: 320px;}
   .registo {height: 673px; width: 320px;}
   .b-selecionar-tipo-utilizador {background: url(../assets/selecionar.svg) no-repeat right; appearance: none; background-position-x: 218px; height: 42px; width: 240px; border: 0.5px solid #aaaaaa; outline: none; padding-left: 10px; background-color: #fafafa; color: #606060; font-family: opensans-light; font-size: 12px; border-radius: 5px; margin: 0px 0px; outline: none; box-shadow: none !important;}
   .preencher-dados-empresa {height: 42px; width: 100%; border: 0.5px solid #aaaaaa; outline: none;}
   .preencher-dados-empresa:focus, .preencher-dados-empresa:hover{color: #0084c0; border: 0.5px solid #0084c0;}
   #dados-empresa___BV_modal_content_ {background-color: #dddddd; border-radius: 10px; width: 320px;}
   .modal-dialog {width: 320px;}
+  @media screen and (max-width: 400px){
+    .registo {width: 90%;} 
+  }
 </style>
 <script>
 export default {
