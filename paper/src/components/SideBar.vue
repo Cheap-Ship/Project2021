@@ -19,7 +19,7 @@
           </div></router-link>
           </div>
           <router-link :to="{name:'Perfil'}" class="opcoes margem-b30"><div class="opcao d-flex justify-content-start align-items-center fundo-30 margem-x10 borda-r5">
-            <img :src="obterInfoUtilizador.foto" class="foto-perfil-sb borda-r5"/>
+            <img :src="obterInfoUtilizador.foto" class="foto-perfil-sb borda-r5" alt="Imagem de perfil do utilizador"/>
             <a class="limitar-texto-sb" id="a-sb">{{obterInfoUtilizador.nome + ' ' + obterInfoUtilizador.apelido}}</a>
           </div></router-link>
       </div>
