@@ -97,7 +97,7 @@ export default {
           numero_estudante: this.utilizador.numero_estudante,
           nome_empresa: this.utilizador.nome_empresa,
           cca: false,
-          foto: "https://lh3.googleusercontent.com/-4yFaWmS7-Pg/X_xzGKwqwHI/AAAAAAAAAAY/L78mg1HQzvELjdvv5xiLqZT6keuBmoGSACMICGAYYCw/s83-c/foto_default.png",
+          foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
           inscricao: null,
           cv: null,
           portfolio: null,

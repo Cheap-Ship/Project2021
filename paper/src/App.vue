@@ -210,7 +210,7 @@
   ::-webkit-scrollbar-thumb {background: rgba(128, 128, 128, 0.5); border-radius: 5px; border: 2px solid #eeeeee;}
   ::-webkit-scrollbar-thumb:hover {background: rgba(112, 112, 112, 0.5);}
 /* Outros */
-  * {outline: none;}
+  /* {outline: none;}*/
   button:focus {outline: none;}
   .cursor-pointer {cursor: pointer;}
   /* Container para o formulário de autenticação/registo */

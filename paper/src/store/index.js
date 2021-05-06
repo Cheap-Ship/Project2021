@@ -34,7 +34,7 @@ export default new Vuex.Store({
         numero_estudante: 40190120,
         nome_empresa: null,
         cca: false,
-        foto: "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png",
+        foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
         inscricao: null,
         cv: null,
         portfolio: null,

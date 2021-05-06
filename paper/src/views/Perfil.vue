@@ -10,7 +10,7 @@
                   <div class="area-perfil-conteudo d-flex justify-content-between fundo-ff borda-fina borda-aa borda-r5" name="perfil-conteudo">
                     <div class="info-perfil-utilizador d-flex flex-wrap-start">
                       <div class="area-foto-perfil-utilizador">
-                        <img :src="obterInfoUtilizador.foto" class="foto-perfil borda-grossa borda-70 borda-r5"/>
+                        <img :src="obterInfoUtilizador.foto" class="foto-perfil borda-grossa borda-70 borda-r5" alt="Imagem de perfil do utilizador"/>
                       </div>
                       <div class="area-dados-perfil-utilizador d-flex flex-wrap align-content-between margem-y8">
                         <div class="nome-e-tipo-utilizador">
