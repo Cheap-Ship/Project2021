@@ -10,7 +10,7 @@
             <!-- Filtro de texto -->
             <input class="input-pesquisa-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5" type="text" placeholder="Escreva alguma coisa...">
             <!-- Filtro de seleção do tipo de proposta -->
-            <select v-model="select" class="selecionar-tipo-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5 margem-all4" name="selecionar-tipo-proposta">
+            <select v-model="select" class="selecionar-tipo-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5 margem-all4 cursor-pointer" name="selecionar-tipo-proposta">
               <option value="-1" for="selecionar-tipo-proposta">Tipo de Proposta</option>
               <option value="1" for="selecionar-tipo-proposta">Projetos</option>
               <option value="0" for="selecionar-tipo-proposta">Estágio</option>
@@ -40,14 +40,14 @@
             <!-- Área de seleção da proposta (lado esquerdo) -->
             <div class="area-selecao-proposta margem-all8 width-50">
               <!-- Cards das propostas -->
-              <b-card class="d-flex justify-content-start" v-for="(proposta) in obterCardsPropostas[counter]" :key="proposta.id" @click="displayProposta = proposta">
+              <b-card class="d-flex justify-content-start cursor-pointer" v-for="(proposta) in obterCardsPropostas[counter]" :key="proposta.id" @click="displayProposta = proposta">
                 <!-- Nesta fase a imagem é por defeito -->
                 <div class="imagem-proposta d-flex justify-content-center align-items-center fundo-dd borda-fina borda-aa borda-r5 sem-margens">
                   <svg id="icone-proposta" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path class="cls-1" d="M18,0H2A2,2,0,0,0,0,2V18a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V2A2,2,0,0,0,18,0ZM11.49,15h-7a.5.5,0,0,1,0-1h7a.5.5,0,1,1,0,1Zm4-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Zm0-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"/></svg>
                 </div>
                 <div class="texto-proposta d-flex align-items-center flex-wrap">
-                  <p class="texto-proposta-titulo align-left">{{proposta.titulo}}</p>
-                  <p class="texto-proposta-tipo align-left">{{proposta.tipo}}</p>
+                  <p class="texto-proposta-titulo align-left mukta-r fonte-24 cor-20 sem-margens">{{proposta.titulo}}</p>
+                  <p class="texto-proposta-tipo align-left opensans-r fonte-16 cor-20 sem-margens">{{proposta.tipo}}</p>
                 </div>
               </b-card>
               <button v-for="(proposta, index) in propostas" :key="index" @click="counter = index" style="background: red; width: 20px; height: 20px;"></button>
@@ -72,40 +72,44 @@
                 </template>
               </div>
               <!-- Dados secundários da proposta -->
-              <div class="info-proposta-secundaria d-flex flex-wrap fundo-ff borda-fina borda-aa borda-r5">
+              <div class="info-proposta-secundaria d-flex flex-wrap align-content-between fundo-ff borda-fina borda-aa borda-r5">
                 <!-- Nome da empresa -->
                 <div class="dados-empresa fundo-f4 borda-r5">
                   <template v-if="displayProposta != null && displayProposta.empresa != null">
-                    <p class="fonte-14 sem-margens">Empresa</p><p class="fonte-14 sem-margens">{{displayProposta.empresa}}</p>
+                    <p class="bloco-texto-secundario opensans-sb fonte-20 cor-20 sem-margens">Empresa</p>
+                    <p class="bloco-texto-secundario opensans-r fonte-14 cor-80 sem-margens">{{displayProposta.empresa}}</p>
                   </template>
                 </div>
                 <!-- Morada da empresa -->
                 <div class="dados-empresa fundo-f4 borda-r5">
                   <template v-if="displayProposta != null && displayProposta.empresa != null">
-                    <p class="fonte-14 sem-margens">Morada</p><p class="fonte-14 sem-margens">{{displayProposta.morada}}</p>
+                    <p class="bloco-texto-secundario opensans-sb fonte-20 cor-20 sem-margens">Morada</p>
+                    <p class="bloco-texto-secundario opensans-r fonte-14 cor-80 sem-margens">{{displayProposta.morada}}</p>
                   </template>
                 </div>
                 <!-- Website -->
                 <div class="dados-empresa fundo-f4 borda-r5">
                   <template v-if="displayProposta != null && displayProposta.empresa != null">
-                    <p class="fonte-14 sem-margens">Website</p><p class="fonte-14 sem-margens">{{displayProposta.website}}</p>
+                    <p class="bloco-texto-secundario opensans-sb fonte-20 cor-20 sem-margens">Website</p>
+                    <p class="bloco-texto-secundario opensans-r fonte-14 cor-80 sem-margens">{{displayProposta.website}}</p>
                   </template>
                 </div>
               </div>
               <!-- Dados terciários da proposta -->
-              <div class="info-proposta-terciaria d-flex flex-wrap fundo-ff borda-r5 borda-fina borda-aa">
+              <div class="info-proposta-terciaria d-flex flex-wrap align-content-between fundo-ff borda-r5 borda-fina borda-aa">
                 <div class="info-proposta-e-tutor fundo-f4 borda-r5">
                   <div class="info-tutor-selecionada"> 
                     <template v-if="displayProposta != null && displayProposta.empresa != null">
-                      <label for="info-tutor-selecionada">Tutor</label>
-                      <p class="sem-margens">{{displayProposta.tutor}}</p>
-                      <p class="sem-margens">{{displayProposta.cargo}}</p>
-                      <p class="sem-margens">{{displayProposta.contacto}}</p>
-                      <p class="sem-margens">{{displayProposta.correio}}</p>
+                      <!-- <label for="info-tutor-selecionada">Tutor</label> -->
+                      <p class="bloco-texto-terciario d-flex align-items-center justify-content-center opensans-r fonte-14 cor-40 sem-margens">{{displayProposta.tutor}} ({{displayProposta.cargo}})</p>
+                      <p class="bloco-texto-terciario d-flex align-items-center justify-content-center opensans-r fonte-14 cor-40 sem-margens">{{displayProposta.contacto}}</p>
+                      <p class="bloco-texto-terciario d-flex align-items-center justify-content-center opensans-r fonte-14 cor-40 sem-margens">{{displayProposta.correio}}</p>
                     </template>
                   </div>
                 </div>
-                  <button :disabled="displayProposta == null" @click="inscreverProposta">Inscrever na Proposta</button>
+                  <button :disabled="displayProposta == null" @click="inscreverProposta" class="inscrever-proposta-btn d-flex align-items-center justify-content-center fundo-40 borda-fina borda-20 borda-r5 opensans-sb fonte-14 cor-ee cursor-pointer">
+                    <a>Inscrever na Proposta</a>
+                  </button>
               </div>
             </div>
           </div>
@@ -119,6 +123,9 @@
 </template>
 <style>
 /* Estilização específica a esta página: */
+  .bloco-texto-secundario {height: 50%;}
+  .bloco-texto-terciario {height: calc(100% / 3);}
+  .texto-proposta {margin: 1% 2%;}
   .texto-proposta-titulo {width: 100%;}
   .imagem-proposta {height: 100%; aspect-ratio: 1/1;}
   #icone-proposta {height: 50%; fill: #aaaaaa}
@@ -133,19 +140,21 @@
   .link-criar-proposta-btn {margin: 4px 8px 4px 4px;}
   .area-outros-componentes-propostas a {color: #eeeeee !important; text-decoration: none;}
   .selecionar-tipo-proposta {width: 152px; background-position-x: 128px; margin: 4px 4px;}
-  .link-gerir-propostas-btn, .link-criar-proposta-btn{height: 42px; padding: 0px 10px;}
+  .link-gerir-propostas-btn, .link-criar-proposta-btn {height: 42px; padding: 0px 10px;}
+  .inscrever-proposta-btn {height: 42px; width: 100%;}
   .area-outros-componentes-propostas button a{text-decoration: none; padding-left: 10px;}
   #gerir-propostas-svg, #criar-proposta-svg{fill: #eeeeee;}
-  .link-gerir-propostas-btn:hover a{color: #707070 !important;}
+  .link-gerir-propostas-btn:hover a, .inscrever-proposta-btn:hover a{color: #707070 !important;}
   .link-gerir-propostas-btn:hover #gerir-propostas-svg{fill: #707070;}
   .link-criar-proposta-btn:hover a{color: #004666 !important;}
   .link-criar-proposta-btn:hover #criar-proposta-svg{fill: #004666;}
   .info-proposta-principal{height: 60%; width: 100%; margin-bottom: 16px; overflow-y: auto; overflow-x: hidden;}
-  .info-proposta-secundaria{height: calc(40% - 16px); width: calc(50% - 8px); margin-right: 16px;}
-  .info-proposta-terciaria{height: calc(40% - 16px); width: calc(50% - 8px);}
-  .dados-empresa{height: auto; width: 100%; margin: 4px 4px;}
-  .info-proposta-e-tutor{height: 72%; width: 100%; margin: 4px 4px;}
-  .info-proposta-selecionada, .info-tutor-selecionada{height: 50%;}
+  .info-proposta-secundaria{height: calc(40% - 16px); width: calc(50% - 8px); margin-right: 16px; padding: 4px 4px;}
+  .info-proposta-terciaria{height: calc(40% - 16px); width: calc(50% - 8px); padding: 4px 4px;}
+  .dados-empresa {height: 32%; width: 100%;}
+  .info-proposta-e-tutor {width: 100%; height: 60%;}
+  .info-proposta-selecionada {height: 50%;}
+  .info-tutor-selecionada {height: 100%;}
   .info-proposta-texto {word-break: break-word;}
 </style>
 <script>
