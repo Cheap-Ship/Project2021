@@ -36,6 +36,7 @@
     height: 100%; 
     background-color: #e7e7e7; 
     text-align: center; 
+    min-height: 600px;
   }
 /* Margens */
   .sem-margens {margin: 0px;}
@@ -103,8 +104,9 @@
   .mukta-r {font-family: 'Mukta', sans-serif; font-weight: 400;}
   .mukta-m {font-family: 'Mukta', sans-serif; font-weight: 500;}
   .mukta-sb {font-family: 'Mukta', sans-serif; font-weight: 600;}
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
   .opensans-l {font-family: 'Open Sans', sans-serif; font-weight: 300;}
+  .opensans-r {font-family: 'Open Sans', sans-serif; font-weight: 400;}
   .opensans-sb {font-family: 'Open Sans', sans-serif; font-weight: 600;}
   /* Tamanhos */
   .fonte-10 {font-size: 10px;}
@@ -192,16 +194,16 @@
   #logo-grande {fill: #202020; height: 45px; width: 160px; margin: 35px 0px;}
   #logo-barra-navegacao {fill: #cccccc; height: 30px; width: 108px; margin: 20px 0px;}
 /* Áreas de conteúdo */
-  .area-visivel {width: 100%; height: 100vh;} /* Necessário em qualquer página */
+  .area-visivel {width: 100%; min-height: 600px;} /* Necessário em qualquer página */
   /* Caso não tenha navegação superior: */
-  .area-conteudo {width: 100%; height: calc(100vh - 110px); margin: 70px 40px 40px 40px;}
+  .area-conteudo {width: 100%; margin: 70px 40px 40px 40px;}
   /* Caso tenha navegação superior (usar também o anterior, sendo que os dois abaixo ficam dentro desse div): */
   .navegador-superior {height: 50px;}
   .area-conteudo-com-navegador {height: calc(100% - 70px);}
   /* Para as tabelas: */
   .area-tabela{width: 100%; padding: 8px 8px;}
 /* Tabelas */
-  .tabela {width: 100%; border-radius: 5px; border-collapse: collapse; overflow: hidden;}
+  .tabela {width: 100%; border-radius: 5px; border-collapse: collapse; overflow: hidden; box-shadow: 0px 0px 0.5px 0.5px rgba(20, 20, 20, 0.5)}
   th {background-color: #d2d2d2; font-family: mukta-light; font-size: 14px; border: 1px solid #707070; height: 36px;}
   td {background-color: #f4f4f4; font-family: opensans-light; font-size: 12px; border: 1px solid #707070; height: 36px;}
 /* Scrollbar */
