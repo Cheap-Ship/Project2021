@@ -454,7 +454,8 @@ export default new Vuex.Store({
     obterCardsPropostas: (state) => (select) => {
       const tabela = [];
       let counter = 0, ph = [];
-      state.propostas.forEach(proposta => {
+      const lista_invertida = state.propostas.reverse();
+      lista_invertida.forEach(proposta => {
         if (proposta.id_tipo != select) {
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
@@ -489,9 +490,8 @@ export default new Vuex.Store({
         }
       });
       if (ph.length > 0) {
-        tabela.push(ph);;
+        tabela.push(ph);
       }
-      console.log(tabela)
       return tabela;
     }
   },
@@ -645,7 +645,6 @@ export default new Vuex.Store({
           context.commit('AUTENTICADO', utilizador)
           if(payload.manter_conectado){
             localStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
-            console.log(payload.manter_conectado)
           }
           else{
             sessionStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
