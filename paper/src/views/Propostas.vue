@@ -120,7 +120,7 @@
 <style>
 /* Estilização específica a esta página: */
   .texto-proposta-titulo {width: 100%;}
-  .imagem-proposta {height: 100%; width: 116px;}
+  .imagem-proposta {height: 100%; aspect-ratio: 1/1;}
   #icone-proposta {height: 50%; fill: #aaaaaa}
   .area-de-propostas {width: 100%; height: calc(100% - 20px);}
   .selecionar-paginas {background: grey; width: 50%; height: 12px;}
@@ -128,7 +128,7 @@
   .area-selecao-proposta .card:hover {background: #f9f9f9; border-color:#707070; box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05);}
   .area-selecao-proposta .card:hover .imagem-proposta {border-color:#707070; background: #cccccc;}
   .area-selecao-proposta .card:hover #icone-proposta {fill: #707070;}
-  .area-selecao-proposta .card .card-body {padding: 4px 4px; display: flex;}
+  .area-selecao-proposta .card .card-body {padding: 1% 1%; display: flex;}
   .input-pesquisa-proposta {margin: 4px 4px 4px 8px;}
   .link-criar-proposta-btn {margin: 4px 8px 4px 4px;}
   .area-outros-componentes-propostas a {color: #eeeeee !important; text-decoration: none;}

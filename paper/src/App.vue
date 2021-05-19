@@ -32,14 +32,10 @@
     /!\ Tudo que tenha router-link tem de ser estilizado atravês do nome da classe + a /!\
 */
 /* Fundo das páginas */ 
-  html, body, #app, .container-autenticacao-registo, .view {
+  html, body, #app, .container-autenticacao, .container-registo, .view {
     height: 100%; 
     background-color: #e7e7e7; 
     text-align: center; 
-  }
-  .container-autenticacao-registo {
-    min-height: 754px; /* Alterar mais tarde */ 
-    min-width: 400px; /* Alterar mais tarde */
   }
 /* Margens */
   .sem-margens {margin: 0px;}
@@ -180,14 +176,17 @@
 /* Animações */
   .animacao-opacidade-sombra-forte {animation: 0.6s ease-in-out 0s 1 aosf;}
   @keyframes aosf {
-    from {opacity: 0; box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);}
+    from {opacity: 0; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);}
     to {opacity: 1; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);}
   }
   .animacao-opacidade-sombra-ligeira {animation: 1s ease-in-out 0s 1 aosl;}
   @keyframes aosl {
-    0% {opacity: 0; box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);}
+    0% {opacity: 0; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);}
     60% {opacity: 1;}
     100% {box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);}
+  }
+  .will-change {
+    will-change: opacity;
   }
 /* Logo */
   #logo-grande {fill: #202020; height: 45px; width: 160px; margin: 35px 0px;}
@@ -211,7 +210,7 @@
   ::-webkit-scrollbar-thumb {background: rgba(128, 128, 128, 0.5); border-radius: 5px; border: 2px solid #eeeeee;}
   ::-webkit-scrollbar-thumb:hover {background: rgba(112, 112, 112, 0.5);}
 /* Outros */
-  * {outline: none;}
+  /* {outline: none;}*/
   button:focus {outline: none;}
   .cursor-pointer {cursor: pointer;}
   /* Container para o formulário de autenticação/registo */

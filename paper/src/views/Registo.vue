@@ -1,5 +1,5 @@
 <template>
-  <div class="container-autenticacao-registo d-flex justify-content-center align-items-center">
+  <div class="container-registo d-flex justify-content-center align-items-center">
     <div class="registo animacao-opacidade-sombra-forte fundo-dd borda-fina borda-70 borda-r10 sombra-forte">
       <div class="container-formulario-autenticacao-registo">
         <form @submit.prevent="registo">
@@ -15,7 +15,6 @@
           <div class="ver-helper d-flex justify-content-end sem-margens">
           <svg @click="mostrar" class="ver cursor-pointer sem-margens" xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24"><path d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 7.449-11.985 7.449c-7.18 0-12.015-7.449-12.015-7.449s4.446-6.551 12.015-6.551c7.694 0 11.985 6.551 11.985 6.551zm-7 .449c0-2.761-2.238-5-5-5-2.761 0-5 2.239-5 5 0 2.762 2.239 5 5 5 2.762 0 5-2.238 5-5z"/></svg>
           </div>
-          <!-- Erro aqui -->
           <label class="d-flex justify-content-start cor-20 fonte-14 mukta-m sem-margens margem-l5 margem-t7" for="tipo-utilizador">Tipo de utilizador</label>
           <b-select class="b-selecionar-tipo-utilizador" name="tipo-utilizador" v-model="utilizador.tipo_utilizador" :options="$store.getters.obterTipoUtilizador" required="required"></b-select>
           <div v-if="utilizador.tipo_utilizador==2">
@@ -54,12 +53,16 @@
 </template>
 <style>
 /* Estilização específica a esta página: */
+  .container-registo {min-height: 713px; min-width: 320px;}
   .registo {height: 673px; width: 320px;}
   .b-selecionar-tipo-utilizador {background: url(../assets/selecionar.svg) no-repeat right; appearance: none; background-position-x: 218px; height: 42px; width: 240px; border: 0.5px solid #aaaaaa; outline: none; padding-left: 10px; background-color: #fafafa; color: #606060; font-family: opensans-light; font-size: 12px; border-radius: 5px; margin: 0px 0px; outline: none; box-shadow: none !important;}
   .preencher-dados-empresa {height: 42px; width: 100%; border: 0.5px solid #aaaaaa; outline: none;}
   .preencher-dados-empresa:focus, .preencher-dados-empresa:hover{color: #0084c0; border: 0.5px solid #0084c0;}
   #dados-empresa___BV_modal_content_ {background-color: #dddddd; border-radius: 10px; width: 320px;}
   .modal-dialog {width: 320px;}
+  @media screen and (max-width: 400px){
+    .registo {width: 90%;} 
+  }
 </style>
 <script>
 export default {
@@ -94,7 +97,7 @@ export default {
           numero_estudante: this.utilizador.numero_estudante,
           nome_empresa: this.utilizador.nome_empresa,
           cca: false,
-          foto: "https://lh3.googleusercontent.com/-4yFaWmS7-Pg/X_xzGKwqwHI/AAAAAAAAAAY/L78mg1HQzvELjdvv5xiLqZT6keuBmoGSACMICGAYYCw/s83-c/foto_default.png",
+          foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
           inscricao: null,
           cv: null,
           portfolio: null,

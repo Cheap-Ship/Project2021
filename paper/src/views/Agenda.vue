@@ -61,25 +61,16 @@ export default {
   },
   data() {
     return {
-
       //FIXME: GETTER NEEDED AFTER PROPOSTAS!
       //FIXME:PRECISA DE SER ARRAY
       entrevistas: []
-
-
     };
   },
 
   methods: {
-
     adicionarEntrevista() {
       console.log("test")
       //Metodo que irá adicionar as entrevistas a plataforma
-
-
-
-
-
     },
   },
 };
