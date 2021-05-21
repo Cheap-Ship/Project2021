@@ -254,14 +254,6 @@ export default new Vuex.Store({
         ano_letivo: ""
       }
     ],
-    prazos: [
-      {
-        id_prazo: 0,
-        ano_letivo: "",
-        prazo: "",
-        data_hora: ""
-      }
-    ],
     notificacoes: localStorage.getItem('notificacoes') ? JSON.parse(localStorage.getItem('notificacoes')) : [],
     temas: [
       {id_tema: 0, tema: "Inscrição"},
@@ -292,6 +284,14 @@ export default new Vuex.Store({
       return state.inscricoes.length > 0 ?
       state.inscricoes[state.inscricoes.length - 1].id_inscricao + 1
       : 0;
+    },
+    obterTipoUtilizador: (state) => {
+      const ops = []
+      const len = state.tipo_utilizadores.length;
+      for (let i = 1; i < len; i++) {
+        ops.push({value: state.tipo_utilizadores[i].id, text: state.tipo_utilizadores[i].tipo})
+      }
+      return ops;
     },
     obterTipoUtilizadorePorId: (state) => (id) => {
       return state.tipo_utilizadores.find(tu => id == tu.id).tipo
@@ -454,7 +454,8 @@ export default new Vuex.Store({
     obterCardsPropostas: (state) => (select) => {
       const tabela = [];
       let counter = 0, ph = [];
-      state.propostas.forEach(proposta => {
+      const lista_invertida = state.propostas.reverse();
+      lista_invertida.forEach(proposta => {
         if (proposta.id_tipo != select) {
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
@@ -489,9 +490,8 @@ export default new Vuex.Store({
         }
       });
       if (ph.length > 0) {
-        tabela.push(ph);;
+        tabela.push(ph);
       }
-      console.log(tabela)
       return tabela;
     }
   },
@@ -645,7 +645,6 @@ export default new Vuex.Store({
           context.commit('AUTENTICADO', utilizador)
           if(payload.manter_conectado){
             localStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
-            console.log(payload.manter_conectado)
           }
           else{
             sessionStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
