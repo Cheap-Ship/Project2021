@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 Vue.use(Vuex);
+const API_URL = "http://127.0.0.1:8080/";
 
 export default new Vuex.Store({
   state: {
@@ -21,74 +22,7 @@ export default new Vuex.Store({
       {id_tipo: 0, proposta: "Projeto"},
       {id_tipo: 1, proposta: "Estágio"}
     ],
-    utilizadores: localStorage.getItem('utilizadores') ? JSON.parse(localStorage.getItem('utilizadores')) : [
-      // Estudante
-      { 
-        id_utilizador: 0,
-        id_estado: 0,
-        nome: "João",
-        apelido: "Silva",
-        correio: "40190120@esmad.ipp.pt",
-        passe: "123",
-        id_tipo: 1,
-        numero_estudante: 40190120,
-        nome_empresa: null,
-        cca: false,
-        foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
-        inscricao: null,
-        cv: null,
-        portfolio: null,
-        facebook: null,
-        instagram: null,
-        github: null,
-        discord: null,
-        ano: "2020/2021"
-      },
-      // Docente 
-      { 
-        id_utilizador: 1,
-        id_estado: 1,
-        nome: "Miguel",
-        apelido: "Almeida",
-        correio: "miguelalmeida@esmad.ipp.pt",
-        passe: "123",
-        id_tipo: 0,
-        numero_estudante: null,
-        nome_empresa: null,
-        cca: true,
-        foto: "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png",
-        inscricao: null,
-        cv: null,
-        portfolio: null,
-        facebook: null,
-        instagram: null,
-        github: null,
-        discord: null,
-        ano: "2020/2021"
-      },
-      // Entidade Externa
-      {
-        id_utilizador: 2,
-        id_estado: 1,
-        nome: "Samuel",
-        apelido: "Ribeiro",
-        correio: "samribas@gmail.com",
-        passe: "123",
-        id_tipo: 2,
-        numero_estudante: null,
-        nome_empresa: "MeetUp",
-        cca: false,
-        foto: "https://www.tenforums.com/geek/gars/images/2/types/thumb_15951118880user.png",
-        inscricao: null,
-        cv: null,
-        portfolio: null,
-        facebook: null,
-        instagram: null,
-        github: null,
-        discord: null,
-        ano: "2020/2021"
-      }
-    ],
+    utilizadores: [],
     agenda: {
       id_utilizador: 0,
       id_convidado: 0,
@@ -101,7 +35,7 @@ export default new Vuex.Store({
         id_proposta: 0, 
         id_estado: 1,
         motivo: "",
-        id_criador: 0,
+        id_criador: 1,
         id_docente: 0,
         id_tipo: 0,
         titulo: "Paper",
@@ -118,97 +52,12 @@ export default new Vuex.Store({
         id_proposta: 1,
         id_estado: 1,
         motivo: "",
-        id_criador: 0,
+        id_criador: 1,
         id_docente: 0,
         id_tipo: 1,
         titulo: "Swift",
         objetivos: "Completar",
         planos: "Plataforma Maratonas",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 2,
-        id_estado: 1,
-        motivo: "",
-        id_criador: 0,
-        id_docente: 0,
-        id_tipo: 1,
-        titulo: "Swift",
-        objetivos: "Completar",
-        planos: "Plataforma Maratonas",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 3,
-        id_estado: 1,
-        motivo: "",
-        id_criador: 0,
-        id_docente: 0,
-        id_tipo: 1,
-        titulo: "Swift",
-        objetivos: "Completar",
-        planos: "Plataforma Maratonas",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 4, 
-        id_estado: 1,
-        motivo: "",
-        id_criador: 0,
-        id_docente: 0,
-        id_tipo: 0,
-        titulo: "Paper",
-        objetivos: "Passar",
-        planos: "Plataforma Projetos",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 5, 
-        id_estado: 1,
-        motivo: "",
-        id_criador: 0,
-        id_docente: 0,
-        id_tipo: 0,
-        titulo: "Paper",
-        objetivos: "Passar",
-        planos: "Plataforma Projetos",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 6, 
-        id_estado: 1,
-        motivo: "",
-        id_criador: 0,
-        id_docente: 0,
-        id_tipo: 0,
-        titulo: "Paper",
-        objetivos: "Passar",
-        planos: "Plataforma Projetos",
         resultados: "Bons",
         perfil: "Qualquer um",
         dados: "Nada",
@@ -239,7 +88,7 @@ export default new Vuex.Store({
     inscricoes: localStorage.getItem('inscricoes') ? JSON.parse(localStorage.getItem('inscricoes')) : [ 
       {
         id_inscricao: 0,
-        id_utilizador: 0,
+        id_utilizador: 1,
         id_proposta: 0,
         id_estado: 0,
         preferencia: 1,
@@ -247,7 +96,7 @@ export default new Vuex.Store({
       },
       {
         id_inscricao: 1,
-        id_utilizador: 0,
+        id_utilizador: 1,
         id_proposta: 1,
         id_estado: 0,
         preferencia: 2,
@@ -496,6 +345,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    FETCH_UTILIZADORES(state, payload) {
+      state.utilizadores = payload
+    },
     AUTENTICADO(state, utilizador){
       state.utilizadorAutenticado = utilizador;
     },
@@ -633,6 +485,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async fetchUtilizadores(context) {
+      const response = await fetch(API_URL+'utilizadores', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_UTILIZADORES', data) : alert(data.message)
+    },
     autenticacao(context, payload) {
       const utilizador = context.state.utilizadores.find(
         (utilizador) => utilizador.correio === payload.correio && utilizador.passe === payload.passe).id_utilizador;
