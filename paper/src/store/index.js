@@ -2,25 +2,25 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 Vue.use(Vuex);
-const API_URL = "http://127.0.0.1:8080/";
+const API_URL = "http://127.0.0.1:8081/";
 
 export default new Vuex.Store({
   state: {
     estados: [
-      {id_estado: 0, estado: "Em análise"},
-      {id_estado: 1, estado: "Aprovado"},
-      {id_estado: 2, estado: "Banido"},
-      {id_estado: 3, estado: "Aprovado por Docente (1/2)"},
-      {id_estado: 4, estado: "Aprovado por Entidade (1/2)"}
+      { id_estado: 0, estado: "Em análise" },
+      { id_estado: 1, estado: "Aprovado" },
+      { id_estado: 2, estado: "Banido" },
+      { id_estado: 3, estado: "Aprovado por Docente (1/2)" },
+      { id_estado: 4, estado: "Aprovado por Entidade (1/2)" }
     ],
-    tipo_utilizadores: [ 
-      {id: 0, tipo: "Docente"},
-      {id: 1, tipo: "Estudante"},
-      {id: 2, tipo: "Entidade Externa"}
+    tipo_utilizadores: [
+      { id: 0, tipo: "Docente" },
+      { id: 1, tipo: "Estudante" },
+      { id: 2, tipo: "Entidade Externa" }
     ],
     tipo_propostas: [
-      {id_tipo: 0, proposta: "Projeto"},
-      {id_tipo: 1, proposta: "Estágio"}
+      { id_tipo: 0, proposta: "Projeto" },
+      { id_tipo: 1, proposta: "Estágio" }
     ],
     utilizadores: [],
     agenda: {
@@ -32,7 +32,7 @@ export default new Vuex.Store({
     },
     propostas: localStorage.getItem('propostas') ? JSON.parse(localStorage.getItem('propostas')) : [
       {
-        id_proposta: 0, 
+        id_proposta: 0,
         id_estado: 1,
         motivo: "",
         id_criador: 1,
@@ -85,7 +85,7 @@ export default new Vuex.Store({
         correio_tutor: "jc@meetup.com"
       }
     ],
-    inscricoes: localStorage.getItem('inscricoes') ? JSON.parse(localStorage.getItem('inscricoes')) : [ 
+    inscricoes: localStorage.getItem('inscricoes') ? JSON.parse(localStorage.getItem('inscricoes')) : [
       {
         id_inscricao: 0,
         id_utilizador: 1,
@@ -105,40 +105,40 @@ export default new Vuex.Store({
     ],
     notificacoes: localStorage.getItem('notificacoes') ? JSON.parse(localStorage.getItem('notificacoes')) : [],
     temas: [
-      {id_tema: 0, tema: "Inscrição"},
-      {id_tema: 1, tema: "Propostas"}
+      { id_tema: 0, tema: "Inscrição" },
+      { id_tema: 1, tema: "Propostas" }
     ],
-    utilizadorAutenticado: localStorage.getItem('utilizadorAutenticado') 
+    utilizadorAutenticado: localStorage.getItem('utilizadorAutenticado')
       ? JSON.parse(localStorage.getItem('utilizadorAutenticado')) : ""
-    },
-  getters:{
-    obterUtilizadorAutenticado: (state) => state.utilizadores.find(u => u.id_utilizador == state.utilizadorAutenticado),
-    ativoUtilizadorAutenticado: (state) => (state.utilizadorAutenticado === "" ? false : true),
-    proximoIDUtilizador: (state) =>  {
+  },
+  getters: {
+    obterUtilizadorAutenticado: (state) => state.utilizadores.find(u => u.id_utilizador == state.utilizadorAutenticado.id_utilizador),
+    ativoUtilizadorAutenticado: (state) => state.utilizadorAutenticado.session,
+    proximoIDUtilizador: (state) => {
       return state.utilizadores.length > 0 ?
-      state.utilizadores[state.utilizadores.length - 1].id_utilizador + 1
-      : 0;
+        state.utilizadores[state.utilizadores.length - 1].id_utilizador + 1
+        : 0;
     },
-    proximoIDEmpresa: (state) =>  {
+    proximoIDEmpresa: (state) => {
       return state.empresas.length > 0 ?
-      state.empresas[state.empresas.length - 1].id_empresa + 1
-      : 0;
+        state.empresas[state.empresas.length - 1].id_empresa + 1
+        : 0;
     },
-    proximoIDNotificacao: (state) =>  {
+    proximoIDNotificacao: (state) => {
       return state.notificacoes.length > 0 ?
-      state.notificacoes[state.notificacoes.length - 1].id_notificacao + 1
-      : 0;
+        state.notificacoes[state.notificacoes.length - 1].id_notificacao + 1
+        : 0;
     },
-    proximoIDInscricao: (state) =>  {
+    proximoIDInscricao: (state) => {
       return state.inscricoes.length > 0 ?
-      state.inscricoes[state.inscricoes.length - 1].id_inscricao + 1
-      : 0;
+        state.inscricoes[state.inscricoes.length - 1].id_inscricao + 1
+        : 0;
     },
     obterTipoUtilizador: (state) => {
       const ops = []
       const len = state.tipo_utilizadores.length;
       for (let i = 1; i < len; i++) {
-        ops.push({value: state.tipo_utilizadores[i].id, text: state.tipo_utilizadores[i].tipo})
+        ops.push({ value: state.tipo_utilizadores[i].id, text: state.tipo_utilizadores[i].tipo })
       }
       return ops;
     },
@@ -199,7 +199,7 @@ export default new Vuex.Store({
           console.log()
         }
       });
-      return tabela.sort(function(a, b) {return -(a.id - b.id);})
+      return tabela.sort(function (a, b) { return -(a.id - b.id); })
     },
     obterTabelaUtilizadores: (state, getters) => (tipo) => {
       const tabela = [];
@@ -210,7 +210,7 @@ export default new Vuex.Store({
             nome: utilizador.nome + " " + utilizador.apelido,
             correio: utilizador.correio,
             complementar: tipo == 'Estudante' ? utilizador.numero_estudante :
-            tipo == 'Docente' ? utilizador.cca : utilizador.nome_empresa,
+              tipo == 'Docente' ? utilizador.cca : utilizador.nome_empresa,
             id_estado: utilizador.id_estado,
             cca: utilizador.cca
           }
@@ -332,7 +332,7 @@ export default new Vuex.Store({
             }
             ph.push(dados);
             counter++;
-            if (counter == 4) { 
+            if (counter == 4) {
               counter = 0; tabela.push(ph); ph = [];
             }
           }
@@ -348,19 +348,19 @@ export default new Vuex.Store({
     FETCH_UTILIZADORES(state, payload) {
       state.utilizadores = payload
     },
-    AUTENTICADO(state, utilizador){
-      state.utilizadorAutenticado = utilizador;
+    AUTENTICADO(state, payload) {
+      state.utilizadorAutenticado = payload;
     },
-    DESCONECTAR(state){
+    DESCONECTAR(state) {
       state.utilizadorAutenticado = "";
     },
-    REGISTADO(state, payload){
+    REGISTADO(state, payload) {
       state.utilizadores.push(payload.utilizador);
       if (payload.empresa != null) { state.empresas.push(payload.empresa); }
     },
-    EDITARPERFIL(state, payload){
+    EDITARPERFIL(state, payload) {
       state.utilizadores = state.utilizadores.map(utilizador => {
-        if(utilizador.id_utilizador == payload.id_utilizador){
+        if (utilizador.id_utilizador == payload.id_utilizador) {
           utilizador.passe = payload.passe_nova
           utilizador.facebook = payload.link_facebook
           utilizador.github = payload.link_github
@@ -485,42 +485,55 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async fetchUtilizadores(context) {
-      const response = await fetch(API_URL+'utilizadores', {
+    async verifySession(context) {
+      const response = await fetch(API_URL + 'utilizadores/verify', {
         method: 'GET',
         headers: {
-          "Content-Type": "application/json;charset=utf-8"
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      context.commit('AUTENTICADO', response.ok ? context.state.utilizadorAutenticado : "")
+      localStorage.setItem('utilizadorAutenticado',
+        response.ok ? JSON.stringify(context.state.utilizadorAutenticado) : "")
+    },
+    async fetchUtilizadores(context) {
+      const response = await fetch(API_URL + 'utilizadores', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
         }
       });
       const data = await response.json()
       response.ok ? context.commit('FETCH_UTILIZADORES', data) : alert(data.message)
     },
-    autenticacao(context, payload) {
-      const utilizador = context.state.utilizadores.find(
-        (utilizador) => utilizador.correio === payload.correio && utilizador.passe === payload.passe).id_utilizador;
-      if (utilizador != undefined){
-        if (utilizador.id_estado === 0) {
-          throw("Espere aprovação");
-        } else if (utilizador.id_estado === 2) {
-          throw("Foi banido da aplicação por tempo indefinido")
-        } else {
-          context.commit('AUTENTICADO', utilizador)
-          if(payload.manter_conectado){
-            localStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
-          }
-          else{
-            sessionStorage.setItem('utilizadorAutenticado', JSON.stringify(utilizador))
-          }
+    async autenticacao(context, payload) {
+      const response = await fetch(API_URL + 'utilizadores/signin', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json()
+      if (response.ok) {
+        if (data.id_estado === 0) {
+          throw Error("Espere aprovação");
+        } else if (data.id_estado === 2) {
+          throw Error("Foi banido da aplicação por tempo indefinido")
         }
-      }
-      else{
-        throw Error ('Autenticação falhada, tente novamente.')
+        const send = { id_utilizador: data.id_utilizador, accessToken: data.accessToken, session: true };
+        context.commit('AUTENTICADO', send)
+        localStorage.setItem('utilizadorAutenticado', JSON.stringify(send))
+      } else {
+        throw Error(data.message)
       }
     },
-    registo(context, payload){
+    registo(context, payload) {
       const utilizador = context.state.utilizadores.find(
         (utilizador) => utilizador.correio === payload.utilizador.correio || (utilizador.numero_estudante === payload.utilizador.numero_estudante && payload.utilizador.numero_estudante != null))
-      if(utilizador == undefined){
+      if (utilizador == undefined) {
         if (payload.empresa != null) {
           const empresa = context.state.empresas.find(
             (empresa) => empresa.nome === payload.empresa.nome)
@@ -529,15 +542,15 @@ export default new Vuex.Store({
         context.commit('REGISTADO', payload);
         localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores))
         localStorage.setItem('empresas', JSON.stringify(context.state.empresas))
-      } else{
+      } else {
         throw Error("Utilizador inválido")
       }
     },
-    desconectar(context){
+    desconectar(context) {
       context.commit("DESCONECTAR");
       localStorage.removeItem("utilizadorAutenticado");
     },
-    editarPerfil(context, payload){
+    editarPerfil(context, payload) {
       context.commit('EDITARPERFIL', payload);
       localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
     },
@@ -627,7 +640,7 @@ export default new Vuex.Store({
       context.commit('REMOVERINSCRICAO', payload);
       for (let index = insc.preferencia; index <= 5; index++) {
         try {
-          const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia+1).id_inscricao
+          const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia + 1).id_inscricao
           context.commit('AUMENTARORDEM', id);
         } catch (error) {
           break;
@@ -637,14 +650,14 @@ export default new Vuex.Store({
     },
     aumentarOrdem(context, payload) {
       const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
-      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia-1).id_inscricao
+      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia - 1).id_inscricao
       context.commit('AUMENTARORDEM', payload);
       context.commit('DIMINUIRORDEM', id);
       localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
     },
     diminuirOrdem(context, payload) {
       const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
-      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia+1).id_inscricao
+      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia + 1).id_inscricao
       context.commit('DIMINUIRORDEM', payload);
       context.commit('AUMENTARORDEM', id);
       localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
@@ -669,15 +682,15 @@ export default new Vuex.Store({
     inscreverProposta(context, payload) {
       const user = context.state.utilizadores.find(u => u.id_utilizador == context.state.utilizadorAutenticado)
       if (user.id_tipo != 1) {
-        throw("Só um estudante se pode inscrever numa proposta")
+        throw ("Só um estudante se pode inscrever numa proposta")
       }
       const inscricao = context.state.inscricoes.find(i => i.id_proposta == payload.id && i.id_utilizador == context.state.utilizadorAutenticado);
       if (inscricao != undefined) {
-        throw("Já está inscrito nesta proposta")
+        throw ("Já está inscrito nesta proposta")
       }
-      const preferencia = context.state.inscricoes.filter(i =>i.id_utilizador == context.state.utilizadorAutenticado).length
+      const preferencia = context.state.inscricoes.filter(i => i.id_utilizador == context.state.utilizadorAutenticado).length
       if (preferencia == 5) {
-        throw("Já está incrito em 5 propostas")
+        throw ("Já está incrito em 5 propostas")
       }
       const dados = {
         id_inscricao: context.getters.proximoIDInscricao,
