@@ -141,6 +141,7 @@ export default {
       try {
         this.$store.dispatch("autenticacao", autenticacao).then(() => {
           this.$router.push({ name: "Propostas" });
+          this.$store.dispatch("fetchUtilizadores");
         });
       } catch (error) {
         alert("Por favor, insira os dados corretamente.");

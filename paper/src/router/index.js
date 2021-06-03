@@ -160,9 +160,6 @@ router.beforeEach((to, from, next) => {
         next();
       }
     })
-  if (Store.getters.ativoUtilizadorAutenticado) {
-    Store.dispatch('fetchUtilizadores')
-  }
 });
 
 export default router;
