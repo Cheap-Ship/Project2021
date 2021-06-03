@@ -100,7 +100,6 @@ export default {
   methods:{
     register(){
       let utilizador = {
-        id_utilizador: this.$store.getters.proximoIDUtilizador,
         id_estado: 1,
         nome: this.utilizador.nome,
         apelido: this.utilizador.apelido,
@@ -118,7 +117,7 @@ export default {
         instagram: null,
         github: null,
         discord: null,
-        ano: ""
+        ano_letivo: "2020/2021"
       }
       const dados = {
         utilizador: utilizador,

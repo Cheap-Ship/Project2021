@@ -66,15 +66,7 @@ export default new Vuex.Store({
         ano_letivo: ""
       }
     ],
-    empresas: localStorage.getItem('empresas') ? JSON.parse(localStorage.getItem('empresas')) : [
-      {
-        id_empresa: 0,
-        nome: "MeetUp",
-        correio: "meetup@contactos.pt",
-        morada: "Rua Óscar da Silva, Porto, Portugal",
-        website: "www.meetup.pt"
-      }
-    ],
+    empresas: [],
     estagios: localStorage.getItem('estagios') ? JSON.parse(localStorage.getItem('estagios')) : [
       {
         id_proposta: 1,
@@ -114,16 +106,6 @@ export default new Vuex.Store({
   getters: {
     obterUtilizadorAutenticado: (state) => state.utilizadores.find(u => u.id_utilizador == state.utilizadorAutenticado.id_utilizador),
     ativoUtilizadorAutenticado: (state) => state.utilizadorAutenticado.session,
-    proximoIDUtilizador: (state) => {
-      return state.utilizadores.length > 0 ?
-        state.utilizadores[state.utilizadores.length - 1].id_utilizador + 1
-        : 0;
-    },
-    proximoIDEmpresa: (state) => {
-      return state.empresas.length > 0 ?
-        state.empresas[state.empresas.length - 1].id_empresa + 1
-        : 0;
-    },
     proximoIDNotificacao: (state) => {
       return state.notificacoes.length > 0 ?
         state.notificacoes[state.notificacoes.length - 1].id_notificacao + 1
@@ -486,7 +468,7 @@ export default new Vuex.Store({
   },
   actions: {
     async verifySession(context) {
-      const response = await fetch(API_URL + 'utilizadores/verify', {
+      const response = await fetch(API_URL + 'auth/verify', {
         method: 'GET',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -509,7 +491,7 @@ export default new Vuex.Store({
       response.ok ? context.commit('FETCH_UTILIZADORES', data) : alert(data.message)
     },
     async autenticacao(context, payload) {
-      const response = await fetch(API_URL + 'utilizadores/signin', {
+      const response = await fetch(API_URL + 'auth/signin', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json;charset=utf-8"
@@ -530,20 +512,39 @@ export default new Vuex.Store({
         throw Error(data.message)
       }
     },
-    registo(context, payload) {
-      const utilizador = context.state.utilizadores.find(
-        (utilizador) => utilizador.correio === payload.utilizador.correio || (utilizador.numero_estudante === payload.utilizador.numero_estudante && payload.utilizador.numero_estudante != null))
-      if (utilizador == undefined) {
+    async registo(context, payload) {
+      const responseUser = await fetch(API_URL + 'auth/signup', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(payload.utilizador)
+      });
+      const dataUser = await responseUser.json()
+      if (responseUser.ok) {
+
         if (payload.empresa != null) {
-          const empresa = context.state.empresas.find(
-            (empresa) => empresa.nome === payload.empresa.nome)
-          payload.empresa = empresa == undefined ? payload.empresa : null;
+          const empresa = context.state.empresas.find((empresa) => empresa.nome === payload.empresa.nome)
+          if (empresa == undefined) {
+            const responseCo = await fetch(API_URL + 'empresas', {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json;charset=utf-8"
+              },
+              body: JSON.stringify(payload.empresa)
+            });
+            const dataCo = await responseCo.json()
+            if (!responseCo.ok) {
+              throw Error(dataCo.message)
+            }
+          } else {
+            payload.empresa = null;
+          }
         }
+
         context.commit('REGISTADO', payload);
-        localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores))
-        localStorage.setItem('empresas', JSON.stringify(context.state.empresas))
       } else {
-        throw Error("Utilizador inválido")
+        throw Error(dataUser.message)
       }
     },
     desconectar(context) {

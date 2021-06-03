@@ -138,14 +138,14 @@ export default {
         passe: this.autenticacao_utilizador.passe,
         manter_conectado: this.autenticacao_utilizador.manter_conectado,
       };
-      try {
-        this.$store.dispatch("autenticacao", autenticacao).then(() => {
+      this.$store.dispatch("autenticacao", autenticacao)
+        .then(() => {
           this.$router.push({ name: "Propostas" });
           this.$store.dispatch("fetchUtilizadores");
+        })
+        .catch((err) => {
+          alert(err);
         });
-      } catch (error) {
-        alert("Por favor, insira os dados corretamente.");
-      }
     },
     mostrar() {
       this.type === "password"
