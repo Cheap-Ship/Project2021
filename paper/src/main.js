@@ -11,10 +11,5 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: h => h(App),
-  created() {
-    if (this.$store.getters.ativoUtilizadorAutenticado) {
-      this.$store.dispatch('fetchUtilizadores')
-    }
-  }
+  render: h => h(App)
 }).$mount("#app");

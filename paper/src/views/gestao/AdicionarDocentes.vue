@@ -109,8 +109,7 @@ export default {
         numero_estudante: null,
         nome_empresa: null,
         cca: this.utilizador.cca,
-        foto: "https://lh3.googleusercontent.com/-4yFaWmS7-Pg/X_xzGKwqwHI/AAAAAAAAAAY/L78mg1HQzvELjdvv5xiLqZT6keuBmoGSACMICGAYYCw/s83-c/foto_default.png",
-        inscricao: null,
+        foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
         cv: null,
         portfolio: null,
         facebook: null,
@@ -127,7 +126,7 @@ export default {
         this.$store.dispatch("registo", dados)
       }
       catch(error){
-        alert("Tente novamente.")                                
+        alert(error)                                
       }
     },
     mostrar(){

@@ -132,7 +132,7 @@ export default {
     };
   },
   methods: {
-    async autenticacao() {
+    autenticacao() {
       const autenticacao = {
         correio: this.autenticacao_utilizador.correio,
         passe: this.autenticacao_utilizador.passe,
@@ -141,7 +141,6 @@ export default {
       this.$store.dispatch("autenticacao", autenticacao)
         .then(() => {
           this.$router.push({ name: "Propostas" });
-          this.$store.dispatch("fetchUtilizadores");
         })
         .catch((err) => {
           alert(err);

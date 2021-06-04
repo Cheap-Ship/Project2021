@@ -70,7 +70,7 @@ export default new Vuex.Store({
     estagios: localStorage.getItem('estagios') ? JSON.parse(localStorage.getItem('estagios')) : [
       {
         id_proposta: 1,
-        id_empresa: 0,
+        id_empresa: 1,
         nome_tutor: "Jorge Cunha",
         contacto_tutor: "936725846",
         cargo_tutor: "Manager",
@@ -105,7 +105,7 @@ export default new Vuex.Store({
   },
   getters: {
     obterUtilizadorAutenticado: (state) => state.utilizadores.find(u => u.id_utilizador == state.utilizadorAutenticado.id_utilizador),
-    ativoUtilizadorAutenticado: (state) => state.utilizadorAutenticado.session,
+    ativoUtilizadorAutenticado: (state) => state.utilizadorAutenticado != "",
     proximoIDNotificacao: (state) => {
       return state.notificacoes.length > 0 ?
         state.notificacoes[state.notificacoes.length - 1].id_notificacao + 1
@@ -330,6 +330,9 @@ export default new Vuex.Store({
     FETCH_UTILIZADORES(state, payload) {
       state.utilizadores = payload
     },
+    FETCH_EMPRESAS(state, payload) {
+      state.empresas = payload
+    },
     AUTENTICADO(state, payload) {
       state.utilizadorAutenticado = payload;
     },
@@ -490,6 +493,17 @@ export default new Vuex.Store({
       const data = await response.json()
       response.ok ? context.commit('FETCH_UTILIZADORES', data) : alert(data.message)
     },
+    async fetchEmpresas(context) {
+      const response = await fetch(API_URL + 'empresas', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_EMPRESAS', data) : alert(data.message)
+    },
     async autenticacao(context, payload) {
       const response = await fetch(API_URL + 'auth/signin', {
         method: 'POST',
@@ -505,7 +519,7 @@ export default new Vuex.Store({
         } else if (data.id_estado === 2) {
           throw Error("Foi banido da aplicação por tempo indefinido")
         }
-        const send = { id_utilizador: data.id_utilizador, accessToken: data.accessToken, session: true };
+        const send = { id_utilizador: data.id_utilizador, accessToken: data.accessToken };
         context.commit('AUTENTICADO', send)
         localStorage.setItem('utilizadorAutenticado', JSON.stringify(send))
       } else {
@@ -551,9 +565,41 @@ export default new Vuex.Store({
       context.commit("DESCONECTAR");
       localStorage.removeItem("utilizadorAutenticado");
     },
-    editarPerfil(context, payload) {
-      context.commit('EDITARPERFIL', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
+    async editarPerfil(context, payload) {
+      const ogUser = context.getters.obterUtilizadorAutenticado
+      let newUser = {
+        id_estado: ogUser.id_estado,
+        nome: ogUser.nome,
+        apelido: ogUser.apelido,
+        correio: ogUser.correio,
+        passe: payload.passe ? payload.passe : ogUser.passe,
+        id_tipo: ogUser.tipo_utilizador,
+        numero_estudante: ogUser.numero_estudante,
+        nome_empresa: ogUser.nome_empresa,
+        cca: ogUser.cca,
+        foto: payload.foto ? payload.foto : ogUser.foto,
+        cv: payload.cv ? payload.cv : ogUser.cv,
+        portfolio: payload.portfolio ? payload.portfolio : ogUser.portfolio,
+        facebook: payload.facebook ? payload.facebook : ogUser.facebook,
+        instagram: payload.instagram ? payload.instagram : ogUser.instagram,
+        github: payload.github ? payload.github : ogUser.github,
+        discord: payload.discord ? payload.discord : ogUser.discord,
+        ano_letivo: ogUser.ano_letivo
+      }
+      const response = await fetch(API_URL + 'utilizadores/' + ogUser.id_utilizador, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (response.ok) {
+        context.commit('EDITARPERFIL', newUser);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
     aprovarUtilizador(context, payload) {
       context.commit('APROVARUTILIZADOR', payload);

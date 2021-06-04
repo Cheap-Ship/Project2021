@@ -137,29 +137,32 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  Store.dispatch('verifySession')
-    .then(() => {
-      throw ("");
-    })
-    .catch(() => {
-      if (to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado) {
-        if (from.name == "Perfil") {
-          next({ name: 'Autenticacao' })
-        } else {
-          next({ name: 'Propostas' });
-        }
-      }
-      else {
-        next();
-      }
-      if (to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado) {
-        next({ name: 'Autenticacao' });
-      }
-      else {
-        next();
-      }
-    })
+router.beforeEach(async (to, from, next) => {
+  if (to.name != "Autenticacao") {
+    try {
+      await Store.dispatch('verifySession')
+      await Store.dispatch("fetchUtilizadores")
+      await Store.dispatch("fetchEmpresas");
+    } catch (error) {
+      next({ name: 'Autenticacao' })
+    }
+  }
+  if (to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado) {
+    if (from.name == "Perfil") {
+      next({ name: 'Autenticacao' })
+    } else {
+      next({ name: 'Propostas' });
+    }
+  }
+  else {
+    next();
+  }
+  if (to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado) {
+    next({ name: 'Autenticacao' });
+  }
+  else {
+    next();
+  }
 });
 
 export default router;

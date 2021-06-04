@@ -323,7 +323,6 @@ export default {
         nome_empresa: this.utilizador.nome_empresa,
         cca: false,
         foto: "https://ik.imagekit.io/hr50zw9o6/Untitled-1-01_0hhDcCt7yl.png",
-        inscricao: null,
         cv: null,
         portfolio: null,
         facebook: null,
