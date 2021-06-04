@@ -127,7 +127,7 @@
             :options="$store.getters.obterTipoUtilizador"
             required="required"
           ></b-select>
-          <div v-if="utilizador.tipo_utilizador == 2">
+          <div v-if="utilizador.tipo_utilizador == 3">
             <label
               class="d-flex justify-content-start cor-20 fonte-14 mukta-m sem-margens margem-l5 margem-t7"
               for="numero-estudante"
@@ -313,7 +313,7 @@ export default {
   methods: {
     registo() {
       const utilizador = {
-        id_estado: 0,
+        id_estado: 1,
         nome: this.utilizador.nome,
         apelido: this.utilizador.apelido,
         correio: this.utilizador.correio,
@@ -332,7 +332,7 @@ export default {
         ano_letivo: "2020/2021",
       };
       const empresa =
-        this.utilizador.tipo_utilizador == 2
+        this.utilizador.tipo_utilizador == 3
           ? {
               nome: this.utilizador.nome_empresa,
               correio: this.utilizador.correio_empresa,

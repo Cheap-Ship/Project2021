@@ -6,100 +6,17 @@ const API_URL = "http://127.0.0.1:8081/";
 
 export default new Vuex.Store({
   state: {
-    estados: [
-      { id_estado: 0, estado: "Em análise" },
-      { id_estado: 1, estado: "Aprovado" },
-      { id_estado: 2, estado: "Banido" },
-      { id_estado: 3, estado: "Aprovado por Docente (1/2)" },
-      { id_estado: 4, estado: "Aprovado por Entidade (1/2)" }
-    ],
-    tipo_utilizadores: [
-      { id: 0, tipo: "Docente" },
-      { id: 1, tipo: "Estudante" },
-      { id: 2, tipo: "Entidade Externa" }
-    ],
-    tipo_propostas: [
-      { id_tipo: 0, proposta: "Projeto" },
-      { id_tipo: 1, proposta: "Estágio" }
-    ],
+    estados: [],
+    tipo_utilizadores: [],
+    tipo_propostas: [],
     utilizadores: [],
-    agenda: {
-      id_utilizador: 0,
-      id_convidado: 0,
-      data: "",
-      hora: "",
-      detalhes: "",
-    },
-    propostas: localStorage.getItem('propostas') ? JSON.parse(localStorage.getItem('propostas')) : [
-      {
-        id_proposta: 0,
-        id_estado: 1,
-        motivo: "",
-        id_criador: 1,
-        id_docente: 0,
-        id_tipo: 0,
-        titulo: "Paper",
-        objetivos: "Passar",
-        planos: "Plataforma Projetos",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      },
-      {
-        id_proposta: 1,
-        id_estado: 1,
-        motivo: "",
-        id_criador: 1,
-        id_docente: 0,
-        id_tipo: 1,
-        titulo: "Swift",
-        objetivos: "Completar",
-        planos: "Plataforma Maratonas",
-        resultados: "Bons",
-        perfil: "Qualquer um",
-        dados: "Nada",
-        recursos: "VSCode",
-        data_hora: "",
-        ano_letivo: ""
-      }
-    ],
+    agenda: [],
+    propostas: [],
     empresas: [],
-    estagios: localStorage.getItem('estagios') ? JSON.parse(localStorage.getItem('estagios')) : [
-      {
-        id_proposta: 1,
-        id_empresa: 1,
-        nome_tutor: "Jorge Cunha",
-        contacto_tutor: "936725846",
-        cargo_tutor: "Manager",
-        correio_tutor: "jc@meetup.com"
-      }
-    ],
-    inscricoes: localStorage.getItem('inscricoes') ? JSON.parse(localStorage.getItem('inscricoes')) : [
-      {
-        id_inscricao: 0,
-        id_utilizador: 1,
-        id_proposta: 0,
-        id_estado: 0,
-        preferencia: 1,
-        ano_letivo: ""
-      },
-      {
-        id_inscricao: 1,
-        id_utilizador: 1,
-        id_proposta: 1,
-        id_estado: 0,
-        preferencia: 2,
-        ano_letivo: ""
-      }
-    ],
-    notificacoes: localStorage.getItem('notificacoes') ? JSON.parse(localStorage.getItem('notificacoes')) : [],
-    temas: [
-      { id_tema: 0, tema: "Inscrição" },
-      { id_tema: 1, tema: "Propostas" }
-    ],
+    estagios: [],
+    inscricoes: [],
+    notificacoes: [],
+    temas: [],
     utilizadorAutenticado: localStorage.getItem('utilizadorAutenticado')
       ? JSON.parse(localStorage.getItem('utilizadorAutenticado')) : ""
   },
@@ -120,12 +37,12 @@ export default new Vuex.Store({
       const ops = []
       const len = state.tipo_utilizadores.length;
       for (let i = 1; i < len; i++) {
-        ops.push({ value: state.tipo_utilizadores[i].id, text: state.tipo_utilizadores[i].tipo })
+        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].tipo })
       }
       return ops;
     },
     obterTipoUtilizadorePorId: (state) => (id) => {
-      return state.tipo_utilizadores.find(tu => id == tu.id).tipo
+      return state.tipo_utilizadores.find(tu => id == tu.id_tipo).tipo
     },
     obterTipoPropostas: (state) => () => {
       return state.tipo_propostas
@@ -133,7 +50,7 @@ export default new Vuex.Store({
     obterTabelaAprovarUsers: (state, getters) => {
       const tabela = [];
       state.utilizadores.forEach(utilizador => {
-        if (utilizador.id_estado == 0) {
+        if (utilizador.id_estado == 1) {
           const dados = {
             id: utilizador.id_utilizador,
             tipo: getters.obterTipoUtilizadorePorId(utilizador.id_tipo),
@@ -149,7 +66,7 @@ export default new Vuex.Store({
     obterTabelaAprovarPropostas: (state, getters) => {
       const tabela = [];
       state.propostas.forEach(proposta => {
-        if (proposta.id_estado == 0) {
+        if (proposta.id_estado == 1) {
           const criador = state.utilizadores.find(u => proposta.id_criador == u.id_utilizador);
           const dados = {
             id: proposta.id_proposta,
@@ -275,7 +192,7 @@ export default new Vuex.Store({
     obterModalVerDetalhes: (state) => (id) => {
       const dados = []
       dados.push(state.propostas.find(p => p.id_proposta == id));
-      if (dados[0].id_tipo == "1") {
+      if (dados[0].id_tipo == 2) {
         const estagio = state.estagios.find(e => e.id_proposta == id)
         dados.push(estagio);
         dados.push(state.empresas.find(e => e.id_empresa == estagio.id_empresa).nome);
@@ -327,11 +244,38 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    FETCH_ESTADOS(state, payload) {
+      state.estados = payload
+    },
+    FETCH_TIPO_UTILIZADORES(state, payload) {
+      state.tipo_utilizadores = payload
+    },
+    FETCH_TIPO_PROPOSTAS(state, payload) {
+      state.tipo_propostas = payload
+    },
     FETCH_UTILIZADORES(state, payload) {
       state.utilizadores = payload
     },
+    FETCH_AGENDA(state, payload) {
+      state.agenda = payload
+    },
+    FETCH_PROPOSTAS(state, payload) {
+      state.propostas = payload
+    },
     FETCH_EMPRESAS(state, payload) {
       state.empresas = payload
+    },
+    FETCH_ESTAGIOS(state, payload) {
+      state.estagios = payload
+    },
+    FETCH_INSCRICOES(state, payload) {
+      state.inscricoes = payload
+    },
+    FETCH_NOTIFICACOES(state, payload) {
+      state.notificacoes = payload
+    },
+    FETCH_TEMAS(state, payload) {
+      state.temas = payload
     },
     AUTENTICADO(state, payload) {
       state.utilizadorAutenticado = payload;
@@ -354,7 +298,7 @@ export default new Vuex.Store({
     APROVARUTILIZADOR(state, payload) {
       state.utilizadores = state.utilizadores.map(utilizador => {
         if (utilizador.id_utilizador == payload) {
-          utilizador.id_estado = 1;
+          utilizador.id_estado = 2;
         }
         return utilizador;
       })
@@ -366,7 +310,7 @@ export default new Vuex.Store({
     APROVARPROPOSTA(state, payload) {
       state.propostas = state.propostas.map(proposta => {
         if (proposta.id_proposta == payload) {
-          proposta.id_estado = 1;
+          proposta.id_estado = 2;
         }
         return proposta;
       })
@@ -477,6 +421,38 @@ export default new Vuex.Store({
       localStorage.setItem('utilizadorAutenticado',
         response.ok ? JSON.stringify(context.state.utilizadorAutenticado) : "")
     },
+    async fetchEstados(context) {
+      const response = await fetch(API_URL + 'estados', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_UTILIZADORES', data) : {}
+    },
+    async fetchTipoUtilizadores(context) {
+      const response = await fetch(API_URL + 'tipo_utilizadores', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_TIPO_UTILIZADORES', data) : {}
+    },
+    async fetchTipoPropostas(context) {
+      const response = await fetch(API_URL + 'tipo_propostas', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_TIPO_PROPOSTAS', data) : {}
+    },
     async fetchUtilizadores(context) {
       const response = await fetch(API_URL + 'utilizadores', {
         method: 'GET',
@@ -486,7 +462,29 @@ export default new Vuex.Store({
         }
       });
       const data = await response.json()
-      response.ok ? context.commit('FETCH_UTILIZADORES', data) : alert(data.message)
+      response.ok ? context.commit('FETCH_UTILIZADORES', data) : {}
+    },
+    async fetchAgenda(context) {
+      const response = await fetch(API_URL + 'agenda', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_AGENDA', data) : {}
+    },
+    async fetchPropostas(context) {
+      const response = await fetch(API_URL + 'propostas', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_PROPOSTAS', data) : {}
     },
     async fetchEmpresas(context) {
       const response = await fetch(API_URL + 'empresas', {
@@ -497,7 +495,51 @@ export default new Vuex.Store({
         }
       });
       const data = await response.json()
-      response.ok ? context.commit('FETCH_EMPRESAS', data) : alert(data.message)
+      response.ok ? context.commit('FETCH_EMPRESAS', data) : {}
+    },
+    async fetchEstagios(context) {
+      const response = await fetch(API_URL + 'estagios', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_ESTAGIOS', data) : {}
+    },
+    async fetchInscricoes(context) {
+      const response = await fetch(API_URL + 'inscricoes', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_INSCRICOES', data) : {}
+    },
+    async fetchNotificacoes(context) {
+      const response = await fetch(API_URL + 'notificacoes', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_NOTIFICACOES', data) : {}
+    },
+    async fetchTemas(context) {
+      const response = await fetch(API_URL + 'temas', {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      const data = await response.json()
+      response.ok ? context.commit('FETCH_TEMAS', data) : {}
     },
     async autenticacao(context, payload) {
       const response = await fetch(API_URL + 'auth/signin', {
@@ -509,9 +551,9 @@ export default new Vuex.Store({
       });
       const data = await response.json()
       if (response.ok) {
-        if (data.id_estado === 0) {
+        if (data.id_estado === 1) {
           throw Error("Espere aprovação");
-        } else if (data.id_estado === 2) {
+        } else if (data.id_estado === 3) {
           throw Error("Foi banido da aplicação por tempo indefinido")
         }
         const send = { id_utilizador: data.id_utilizador, accessToken: data.accessToken };
@@ -598,7 +640,7 @@ export default new Vuex.Store({
     },
     async aprovarUtilizador(context, payload) {
       let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
-      newUser.id_estado = 1
+      newUser.id_estado = 2
       const response = await fetch(API_URL + 'utilizadores/' + payload, {
         method: 'PUT',
         headers: {
@@ -631,7 +673,7 @@ export default new Vuex.Store({
     },
     async aprovarProposta(context, payload) {
       let newProp = context.state.propostas.find(p => p.id_proposta == payload)
-      newProp.id_estado = 1
+      newProp.id_estado = 2
       const response = await fetch(API_URL + 'propostas/' + payload, {
         method: 'PUT',
         headers: {
@@ -644,7 +686,7 @@ export default new Vuex.Store({
         context.commit('APROVARPROPOSTA', payload);
         const notificacao = {
           id: newProp.id_criador,
-          tema: 1,
+          tema: 2,
           texto: "A sua proposta foi aprovada."
         }
         context.dispatch("gerarNotificacao", notificacao);
@@ -665,7 +707,7 @@ export default new Vuex.Store({
         context.commit('NEGARPROPOSTA', payload);
         const notificacao = {
           id: context.state.propostas.find(p => p.id_proposta == payload).id_criador,
-          tema: 1,
+          tema: 2,
           texto: "A sua proposta foi negada."
         }
         context.dispatch("gerarNotificacao", notificacao);

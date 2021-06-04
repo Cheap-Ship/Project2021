@@ -6,13 +6,13 @@
         <!-- Barra de navegação da gestão -->
         <div class="navegador-superior opcoes-gestao animacao-opacidade-sombra-ligeira d-flex justify-content-start align-items-center fundo-f4 margem-b20 borda-r5 sombra-ligeira">
           <!-- Aprovações de utilizadores e propostas -->
-          <router-link :to="{name:'Aprovacoes'}" v-if="obterInfoUtilizador.id_tipo === 0">
+          <router-link :to="{name:'Aprovacoes'}" v-if="obterInfoUtilizador.id_tipo === 1">
             <div class="opcao-gestao d-flex justify-content-start align-items-center fundo-cc borda-aa borda-fina margem-l8 borda-r5 opensans-sb fonte-14">
               <a id="a-gestao">Aprovações</a>
             </div>
           </router-link>
           <!-- Gestão de utilizadores - estudantes, entidades externas e docentes -->
-          <router-link :to="{name:'Utilizadores'}" v-if="obterInfoUtilizador.id_tipo === 0">
+          <router-link :to="{name:'Utilizadores'}" v-if="obterInfoUtilizador.id_tipo === 1">
             <div class="opcao-gestao d-flex justify-content-start align-items-center fundo-cc borda-aa borda-fina margem-l8 borda-r5 opensans-sb fonte-14">
               <a id="a-gestao">Utilizadores</a>
             </div>

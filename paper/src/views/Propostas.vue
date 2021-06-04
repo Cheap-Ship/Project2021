@@ -12,8 +12,8 @@
             <!-- Filtro de seleção do tipo de proposta -->
             <select v-model="select" class="selecionar-tipo-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5 margem-all4 cursor-pointer" name="selecionar-tipo-proposta">
               <option value="-1" for="selecionar-tipo-proposta">Tipo de Proposta</option>
-              <option value="1" for="selecionar-tipo-proposta">Projetos</option>
-              <option value="0" for="selecionar-tipo-proposta">Estágio</option>
+              <option value="2" for="selecionar-tipo-proposta">Projetos</option>
+              <option value="1" for="selecionar-tipo-proposta">Estágio</option>
             </select>
           </div>
           <!-- Área relativa a outros componentes relacionados com propostas -->

@@ -138,30 +138,47 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.name != "Autenticacao") {
+  if (to.name != "Autenticacao" && to.name != "Registo") {
     try {
-      await Store.dispatch('verifySession')
+      await Store.dispatch("verifySession")
+      await Store.dispatch("fetchEstados")
+      await Store.dispatch("fetchTipoPropostas")
       await Store.dispatch("fetchUtilizadores")
-      await Store.dispatch("fetchEmpresas");
+      await Store.dispatch("fetchAgenda")
+      await Store.dispatch("fetchPropostas")
+      await Store.dispatch("fetchEmpresas")
+      await Store.dispatch("fetchEstagios")
+      await Store.dispatch("fetchInscricoes")
+      await Store.dispatch("fetchNotificacoes")
+      await Store.dispatch("fetchTemas")
     } catch (error) {
-      next({ name: 'Autenticacao' })
+      next({ name: "Autenticacao" })
     }
   }
+  await Store.dispatch("fetchTipoUtilizadores")
   if (to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado) {
     if (from.name == "Perfil") {
-      next({ name: 'Autenticacao' })
+      next({ name: "Autenticacao" })
     } else {
-      next({ name: 'Propostas' });
+      next({ name: "Propostas" });
     }
   }
   else {
     next();
   }
   if (to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado) {
-    next({ name: 'Autenticacao' });
+    next({ name: "Autenticacao" });
   }
   else {
-    next();
+    if (to.name == "Gestao") {
+      if (Store.getters.obterUtilizadorAutenticado.id_tipo == 1) {
+        next({ name: "Aprovacoes" })
+      } else {
+        next({ name: "Inscricoes" });
+      }
+    } else {
+      next();
+    }
   }
 });
 
