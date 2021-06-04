@@ -346,12 +346,7 @@ export default new Vuex.Store({
     EDITARPERFIL(state, payload) {
       state.utilizadores = state.utilizadores.map(utilizador => {
         if (utilizador.id_utilizador == payload.id_utilizador) {
-          utilizador.passe = payload.passe_nova
-          utilizador.facebook = payload.link_facebook
-          utilizador.github = payload.link_github
-          utilizador.instagram = payload.link_instagram
-          utilizador.discord = payload.id_discord
-          utilizador.portfolio = payload.link_portfolio
+          utilizador = payload
         }
         return utilizador;
       })
@@ -601,33 +596,83 @@ export default new Vuex.Store({
         throw Error(data.message)
       }
     },
-    aprovarUtilizador(context, payload) {
-      context.commit('APROVARUTILIZADOR', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
-    },
-    negarUtilizador(context, payload) {
-      context.commit('NEGARUTILIZADOR', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
-    },
-    aprovarProposta(context, payload) {
-      const notificacao = {
-        id: context.state.propostas.find(p => p.id_proposta == payload).id_criador,
-        tema: 1,
-        texto: "A sua proposta foi aprovada."
+    async aprovarUtilizador(context, payload) {
+      let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
+      newUser.id_estado = 1
+      const response = await fetch(API_URL + 'utilizadores/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (response.ok) {
+        context.commit('APROVARUTILIZADOR', payload);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
       }
-      context.commit('APROVARPROPOSTA', payload);
-      localStorage.setItem('propostas', JSON.stringify(context.state.propostas));
-      context.dispatch("gerarNotificacao", notificacao);
     },
-    negarProposta(context, payload) {
-      const notificacao = {
-        id: context.state.propostas.find(p => p.id_proposta == payload).id_criador,
-        tema: 1,
-        texto: "A sua proposta foi negada."
+    async negarUtilizador(context, payload) {
+      const response = await fetch(API_URL + 'utilizadores/' + payload, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      if (response.ok) {
+        context.commit('NEGARUTILIZADOR', payload);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
       }
-      context.commit('NEGARPROPOSTA', payload);
-      localStorage.setItem('propostas', JSON.stringify(context.state.propostas));
-      context.dispatch("gerarNotificacao", notificacao);
+    },
+    async aprovarProposta(context, payload) {
+      let newProp = context.state.propostas.find(p => p.id_proposta == payload)
+      newProp.id_estado = 1
+      const response = await fetch(API_URL + 'propostas/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newProp)
+      });
+      if (response.ok) {
+        context.commit('APROVARPROPOSTA', payload);
+        const notificacao = {
+          id: newProp.id_criador,
+          tema: 1,
+          texto: "A sua proposta foi aprovada."
+        }
+        context.dispatch("gerarNotificacao", notificacao);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
+    },
+    async negarProposta(context, payload) {
+      const response = await fetch(API_URL + 'propostas/' + payload, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      if (response.ok) {
+        context.commit('NEGARPROPOSTA', payload);
+        const notificacao = {
+          id: context.state.propostas.find(p => p.id_proposta == payload).id_criador,
+          tema: 1,
+          texto: "A sua proposta foi negada."
+        }
+        context.dispatch("gerarNotificacao", notificacao);
+        } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
     banirUtilizador(context, payload) {
       context.commit('BANIRUTILIZADOR', payload);
