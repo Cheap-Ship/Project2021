@@ -322,7 +322,7 @@ export default new Vuex.Store({
     BANIRUTILIZADOR(state, payload) {
       state.utilizadores = state.utilizadores.map(utilizador => {
         if (utilizador.id_utilizador == payload) {
-          utilizador.id_estado = 2;
+          utilizador.id_estado = 3;
         }
         return utilizador;
       })
@@ -330,7 +330,7 @@ export default new Vuex.Store({
     REVERTERBAN(state, payload) {
       state.utilizadores = state.utilizadores.map(utilizador => {
         if (utilizador.id_utilizador == payload) {
-          utilizador.id_estado = 1;
+          utilizador.id_estado = 2;
         }
         return utilizador;
       })
@@ -354,13 +354,13 @@ export default new Vuex.Store({
     APROVARINSCRICAO(state, payload) {
       state.inscricoes = state.inscricoes.map(inscricao => {
         if (inscricao.id_inscricao == payload.id_inscricao) {
-          if (payload.tipo == 0) {
-            inscricao.id_estado = 1;
+          if (payload.tipo == 1) {
+            inscricao.id_estado = 2;
           } else {
-            if (payload.id_useraut == 0) {
-              inscricao.id_estado = inscricao.id_estado == 4 ? 1 : 3;
+            if (payload.id_useraut == 1) {
+              inscricao.id_estado = inscricao.id_estado == 5 ? 2 : 4;
             } else if (payload.id_useraut == 2) {
-              inscricao.id_estado = inscricao.id_estado == 3 ? 1 : 4;
+              inscricao.id_estado = inscricao.id_estado == 4 ? 2 : 5;
             }
           }
         }
@@ -711,54 +711,135 @@ export default new Vuex.Store({
           texto: "A sua proposta foi negada."
         }
         context.dispatch("gerarNotificacao", notificacao);
-        } else {
+      } else {
         const data = await response.json()
         throw Error(data.message)
       }
     },
-    banirUtilizador(context, payload) {
-      context.commit('BANIRUTILIZADOR', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
+    async banirUtilizador(context, payload) {
+      let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
+      newUser.id_estado = 3
+      const response = await fetch(API_URL + 'utilizadores/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (response.ok) {
+        context.commit('BANIRUTILIZADOR', payload);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
-    reverterBan(context, payload) {
-      context.commit('REVERTERBAN', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
+    async reverterBan(context, payload) {
+      let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
+      newUser.id_estado = 2
+      const response = await fetch(API_URL + 'utilizadores/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (response.ok) {
+        context.commit('REVERTERBAN', payload);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
-    adicionarCCA(context, payload) {
-      context.commit('ADCIONARCCA', payload);
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
+    async adicionarCCA(context, payload) {
+      let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
+      newUser.cca = true
+      const response = await fetch(API_URL + 'utilizadores/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (response.ok) {
+        context.commit('ADCIONARCCA', payload);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
-    removerCCA(context, payload) {
+    async removerCCA(context, payload) {
       if (payload !== context.state.utilizadorAutenticado) {
-        context.commit('REMOVERCCA', payload);
+        let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
+        newUser.cca = false
+        const response = await fetch(API_URL + 'utilizadores/' + payload, {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            "x-access-token": context.state.utilizadorAutenticado.accessToken
+          },
+          body: JSON.stringify(newUser)
+        });
+        if (response.ok) {
+          context.commit('REMOVERCCA', payload);
+        } else {
+          const data = await response.json()
+          throw Error(data.message)
+        }
       } else {
         alert("Não pode remover o seu próprio estatuto CCA")
       }
-      localStorage.setItem('utilizadores', JSON.stringify(context.state.utilizadores));
     },
-    aprovarInscricao(context, payload) {
-      const notificacao = {
-        id: context.state.inscricoes.find(i => i.id_inscricao == payload.id).id_utilizador,
-        tema: 0,
-        texto: "A sua inscrição foi aprovada."
-      }
-      context.commit('APROVARINSCRICAO', {
-        id_inscricao: payload.id,
-        id_useraut: context.getters.obterUtilizadorAutenticado.id_tipo,
-        tipo: context.state.tipo_propostas.find(tp => tp.proposta == payload.tipo_proposta).id_tipo
+    async aprovarInscricao(context, payload) {
+      let newInscr = context.state.inscricoes.find(i => i.id_inscricao == payload.id)
+      newInscr.id_estado = 2
+      const response = await fetch(API_URL + 'inscricoes/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(newInscr)
       });
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
-      context.dispatch("gerarNotificacao", notificacao);
-    },
-    negarInscricao(context, payload) {
-      const notificacao = {
-        id: context.state.inscricoes.find(i => i.id_inscricao == payload).id_utilizador,
-        tema: 0,
-        texto: "A sua inscrição foi negada."
+      if (response.ok) {
+        context.commit('APROVARINSCRICAO', {
+          id_inscricao: payload.id,
+          id_useraut: context.getters.obterUtilizadorAutenticado.id_tipo,
+          tipo: context.state.tipo_propostas.find(tp => tp.proposta == payload.tipo_proposta).id_tipo
+        });
+        const notificacao = {
+          id: newInscr.id_utilizador,
+          tema: 1,
+          texto: "A sua inscrição foi aprovada."
+        }
+        context.dispatch("gerarNotificacao", notificacao);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
       }
-      context.commit('NEGARINSCRICAO', payload);
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
-      context.dispatch("gerarNotificacao", notificacao);
+    },
+    async negarInscricao(context, payload) {
+      const response = await fetch(API_URL + 'inscricoes/' + payload, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      if (response.ok) {
+        context.commit('NEGARINSCRICAO', payload);
+        const notificacao = {
+          id: context.state.inscricoes.find(i => i.id_inscricao == payload).id_utilizador,
+          tema: 1,
+          texto: "A sua inscrição foi negada."
+        }
+          context.dispatch("gerarNotificacao", notificacao);
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
     removerProposta(context, payload) {
       context.commit('REMOVERPROPOSTA', payload);
