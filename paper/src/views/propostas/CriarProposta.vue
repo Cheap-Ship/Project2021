@@ -316,13 +316,12 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault()
-      let propostas = localStorage.getItem('propostas') ? JSON.parse(localStorage.getItem('propostas')) : null
 
       const objProposta = {
-        id_estado: 0,
+        id_estado: 1,
         motivo: "",
         id_criador: this.utilizador.id_utilizador,
-        id_docente: this.utilizador.id_tipo === 0 ? this.utilizador.id_utilizador : null,
+        id_docente: this.utilizador.id_tipo === 1 ? this.utilizador.id_utilizador : null,
         id_tipo: this.form.tipoProposta,
         titulo: this.form.tituloProposta,
         objetivos: this.form.descricaoProposta,
@@ -333,12 +332,6 @@ export default {
         recursos: this.form.recursosNecessarios,
         data_hora: moment().format("DD/MM/YYYY HH:mm"),
         ano_letivo: "2020/2021"
-      }
-      if (propostas == null) {
-        objProposta.id_proposta = 0
-      } else {
-        const ultimaProposta = propostas[propostas.length - 1]
-        objProposta.id_proposta = ultimaProposta.id_proposta + 1
       }
       this.criarProposta(objProposta)
       this.$router.push({name: 'Propostas'})

@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import moment from 'moment';
 
 Vue.use(Vuex);
 const API_URL = "http://127.0.0.1:8081/";
@@ -37,7 +38,7 @@ export default new Vuex.Store({
       const ops = []
       const len = state.tipo_utilizadores.length;
       for (let i = 1; i < len; i++) {
-        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].tipo })
+        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].id_tipo })
       }
       return ops;
     },
@@ -209,7 +210,7 @@ export default new Vuex.Store({
           const estagio = tipo_proposta == 'Estágio' ?
             state.estagios.find(est => est.id_proposta == proposta.id_proposta) : null;
           const empresa = estagio != null ? state.empresas.find(emp => emp.id_empresa == estagio.id_empresa) : null;
-          if (proposta.id_estado == 1) {
+          if (proposta.id_estado == 2) {
             const dados = {
               id: proposta.id_proposta,
               titulo: proposta.titulo,
@@ -354,7 +355,7 @@ export default new Vuex.Store({
     APROVARINSCRICAO(state, payload) {
       state.inscricoes = state.inscricoes.map(inscricao => {
         if (inscricao.id_inscricao == payload.id_inscricao) {
-          if (payload.tipo == 1) {
+          if (payload.id_tipo == 1) {
             inscricao.id_estado = 2;
           } else {
             if (payload.id_useraut == 1) {
@@ -793,7 +794,7 @@ export default new Vuex.Store({
       }
     },
     async aprovarInscricao(context, payload) {
-      let newInscr = context.state.inscricoes.find(i => i.id_inscricao == payload.id)
+      let newInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
       newInscr.id_estado = 2
       const response = await fetch(API_URL + 'inscricoes/' + payload, {
         method: 'PUT',
@@ -805,7 +806,7 @@ export default new Vuex.Store({
       });
       if (response.ok) {
         context.commit('APROVARINSCRICAO', {
-          id_inscricao: payload.id,
+          id_inscricao: payload,
           id_useraut: context.getters.obterUtilizadorAutenticado.id_tipo,
           tipo: context.state.tipo_propostas.find(tp => tp.proposta == payload.tipo_proposta).id_tipo
         });
@@ -835,66 +836,166 @@ export default new Vuex.Store({
           tema: 1,
           texto: "A sua inscrição foi negada."
         }
-          context.dispatch("gerarNotificacao", notificacao);
+        context.dispatch("gerarNotificacao", notificacao);
       } else {
         const data = await response.json()
         throw Error(data.message)
       }
     },
-    removerProposta(context, payload) {
-      context.commit('REMOVERPROPOSTA', payload);
-      context.state.inscricoes.forEach(inscricao => {
-        if (inscricao.id_proposta === payload) {
-          context.dispatch("removerInscricao", inscricao.id_inscricao)
+    async removerProposta(context, payload) {
+      const response = await fetch(API_URL + 'propostas/' + payload, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
         }
       });
-      localStorage.setItem('propostas', JSON.stringify(context.state.propostas));
-    },
-    removerInscricao(context, payload) {
-      const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
-      context.commit('REMOVERINSCRICAO', payload);
-      for (let index = insc.preferencia; index <= 5; index++) {
-        try {
-          const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia + 1).id_inscricao
-          context.commit('AUMENTARORDEM', id);
-        } catch (error) {
-          break;
-        }
+      if (response.ok) {
+        context.commit('REMOVERPROPOSTA', payload);
+        context.state.inscricoes.forEach(inscricao => {
+          if (inscricao.id_proposta === payload) {
+            context.dispatch("removerInscricao", inscricao.id_inscricao)
+          }
+        });
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
       }
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
     },
-    aumentarOrdem(context, payload) {
-      const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
-      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia - 1).id_inscricao
-      context.commit('AUMENTARORDEM', payload);
-      context.commit('DIMINUIRORDEM', id);
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
+    async removerInscricao(context, payload) {
+      const response = await fetch(API_URL + 'inscricoes/' + payload, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        }
+      });
+      if (response.ok) {
+        context.commit('REMOVERINSCRICAO', payload);
+        const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
+        for (let index = insc.preferencia; index <= 5; index++) {
+          try {
+            const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia + 1).id_inscricao
+            context.commit('AUMENTARORDEM', id);
+          } catch (error) {
+            break;
+          }
+        }
+      } else {
+        const data = await response.json()
+        throw Error(data.message)
+      }
     },
-    diminuirOrdem(context, payload) {
-      const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
-      const id = context.state.inscricoes.find(i => i.id_utilizador == insc.id_utilizador && i.preferencia == insc.preferencia + 1).id_inscricao
-      context.commit('DIMINUIRORDEM', payload);
-      context.commit('AUMENTARORDEM', id);
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
+    async aumentarOrdem(context, payload) {
+      let upInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
+      upInscr.preferencia++;
+      let downInscr = context.state.inscricoes.find(i => i.id_utilizador == upInscr.id_utilizador && i.preferencia == upInscr.preferencia)
+      downInscr.preferencia--;
+      const upResponse = await fetch(API_URL + 'inscricoes/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(upInscr)
+      });
+      if (upResponse.ok) {
+        context.commit('AUMENTARORDEM', payload);
+      } else {
+        const upData = await upResponse.json()
+        throw Error(upData.message)
+      }
+      const downResponse = await fetch(API_URL + 'inscricoes/' + downInscr.id_inscricao, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(upInscr)
+      });
+      if (downResponse.ok) {
+        context.commit('DIMINUIRORDEM', downInscr.id_inscricao);
+      } else {
+        const downData = await downResponse.json()
+        throw Error(downData.message)
+      }
     },
-    criarProposta(context, payload) {
-      context.commit('CRIARPROPOSTA', payload);
-      localStorage.setItem('propostas', JSON.stringify(context.state.propostas));
+    async diminuirOrdem(context, payload) {
+      let downInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
+      downInscr.preferencia--;
+      let upInscr = context.state.inscricoes.find(i => i.id_utilizador == downInscr.id_utilizador && i.preferencia == downInscr.preferencia)
+      upInscr.preferencia++;
+      const downResponse = await fetch(API_URL + 'inscricoes/' + payload, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(upInscr)
+      });
+      if (downResponse.ok) {
+        context.commit('DIMINUIRORDEM', payload);
+      } else {
+        const downData = await downResponse.json()
+        throw Error(downData.message)
+      }
+      const upResponse = await fetch(API_URL + 'inscricoes/' + downInscr.id_inscricao, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(upInscr)
+      });
+      if (upResponse.ok) {
+        context.commit('AUMENTARORDEM', downInscr.id_inscricao);
+      } else {
+        const upData = await upResponse.json()
+        throw Error(upData.message)
+      }
     },
-    gerarNotificacao(context, payload) {
-      const date = new Date();
-      const data_hora = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " | " + date.getHours() + ":" + date.getMinutes();
+    async criarProposta(context, payload) {
+      const response = await fetch(API_URL + 'propostas', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json()
+      if (response.ok) {
+        context.commit('CRIARPROPOSTA', payload);
+      } else {
+        throw Error(data.message)
+      }
+    },
+    async gerarNotificacao(context, payload) {
+      // const date = new Date();
+      // const data_hora = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
       const notificacao = {
-        id_notificacao: context.getters.proximoIDNotificacao,
+        id_notificacao: "",
         id_utilizador: payload.id,
         id_tema: payload.tema,
         texto: payload.texto,
-        data_hora: data_hora,
+        data_hora: moment().format("DD/MM/YYYY HH:mm"),
       }
-      context.commit("GERARNOTIFICACAO", notificacao)
-      localStorage.setItem('notificacoes', JSON.stringify(context.state.notificacoes));
+      const response = await fetch(API_URL + 'propostas', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(notificacao)
+      });
+      const data = await response.json()
+      if (response.ok) {
+        context.commit("GERARNOTIFICACAO", notificacao)
+      } else {
+        throw Error(data.message)
+      }
     },
-    inscreverProposta(context, payload) {
+    async inscreverProposta(context, payload) {
       const user = context.state.utilizadores.find(u => u.id_utilizador == context.state.utilizadorAutenticado)
       if (user.id_tipo != 1) {
         throw ("Só um estudante se pode inscrever numa proposta")
@@ -908,27 +1009,53 @@ export default new Vuex.Store({
         throw ("Já está incrito em 5 propostas")
       }
       const dados = {
-        id_inscricao: context.getters.proximoIDInscricao,
+        id_inscricao: "",
         id_utilizador: context.state.utilizadorAutenticado,
         id_proposta: payload.id,
         id_estado: 0,
         preferencia: preferencia + 1,
         ano_letivo: "2020/2021"
       }
-      if (payload.empresa != null) {
-        const estagio = {
-          id_proposta: payload.id,
-          id_empresa: payload.id_empresa,
-          nome_tutor: payload.tutor,
-          contacto_tutor: payload.contacto,
-          cargo_tutor: payload.cargo,
-          correio_tutor: payload.correio
+      const responseInscr = await fetch(API_URL + 'inscricoes', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(dados)
+      });
+      const dataInscr = await responseInscr.json()
+      if (responseInscr.ok) {
+        context.commit("INSCREVERPROPOSTA", dados);
+
+        if (payload.empresa != null) {
+          const estagio = {
+            id_proposta: payload.id,
+            id_empresa: payload.id_empresa,
+            nome_tutor: payload.tutor,
+            contacto_tutor: payload.contacto,
+            cargo_tutor: payload.cargo,
+            correio_tutor: payload.correio
+          }
+          const responseEstag = await fetch(API_URL + 'propostas', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+              "x-access-token": context.state.utilizadorAutenticado.accessToken
+            },
+            body: JSON.stringify(estagio)
+          });
+          const dataEstag = await responseEstag.json()
+          if (responseEstag.ok) {
+            context.commit("INSCREVERESTAGIO", estagio);
+          } else {
+            throw Error(dataEstag.message)
+          }
+
         }
-        context.commit("INSCREVERESTAGIO", estagio);
-        localStorage.setItem('estagios', JSON.stringify(context.state.estagios));
+      } else {
+        throw Error(dataInscr.message)
       }
-      context.commit("INSCREVERPROPOSTA", dados);
-      localStorage.setItem('inscricoes', JSON.stringify(context.state.inscricoes));
     }
   }
 });
