@@ -33,7 +33,6 @@ export default new Vuex.Store({
       return ops;
     },
     obterTipoUtilizadorePorId: (state) => (id) => {
-      console.log(id)
       return state.tipo_utilizadores.find(tu => id == tu.id_tipo).tipo
     },
     obterTipoPropostas: (state) => () => {
@@ -76,10 +75,15 @@ export default new Vuex.Store({
       state.notificacoes.forEach(notificacao => {
         try {
           if (notificacao.id_utilizador == state.utilizadorAutenticado.id_utilizador) {
+            const str = notificacao.data_hora.split("T")
+            const hora = str[1].replace(":00.000Z", "")
+            str[0] = str[0].split("-")
+            const data = str[0][2] + "-" + str[0][1] + "-" + str[0][0]
+            const data_hora = data + " " + hora
             const dados = {
               id: notificacao.id_notificacao,
               id_utilizador: notificacao.id_utilizador,
-              data_hora: notificacao.data_hora,
+              data_hora: data_hora,
               tema: state.temas.find(t => notificacao.id_tema == t.id_tema).tema,
               texto: notificacao.texto
             }
