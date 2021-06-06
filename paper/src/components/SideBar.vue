@@ -9,7 +9,7 @@
             <svg id="icone-sb" xmlns="http://www.w3.org/2000/svg" width="26px" viewBox="0 0 20 20"><path class="cls-1" d="M18,0H2A2,2,0,0,0,0,2V18a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V2A2,2,0,0,0,18,0ZM11.49,15h-7a.5.5,0,0,1,0-1h7a.5.5,0,1,1,0,1Zm4-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Zm0-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"/></svg>
             <a id="a-sb">Propostas</a>
           </div></router-link>
-          <router-link :to="{name:'Gestao'}" class="opcoes" v-if="obterInfoUtilizador.id_tipo !== 1"><div class="opcao d-flex justify-content-start align-items-center fundo-30 margem-x10 borda-r5">
+          <router-link :to="{name:'Gestao'}" class="opcoes" v-if="infoUtilizador.id_tipo !== 2"><div class="opcao d-flex justify-content-start align-items-center fundo-30 margem-x10 borda-r5">
             <svg id="icone-sb" xmlns="http://www.w3.org/2000/svg" width="26px" viewBox="0 0 19 19.67"  xmlns:v="https://vecta.io/nano"><path class="cls-1" d="M18 6.66H1a1 1 0 0 0-1 1V12a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V7.66a1 1 0 0 0-1-1zM2.32 10.74a.41.41 0 0 1-.41.41H1.4a.41.41 0 0 1-.41-.41V8.89a.41.41 0 0 1 .41-.41h.51a.41.41 0 0 1 .41.41zm3.69 0a.41.41 0 0 1-.41.41H3.75a.41.41 0 0 1-.41-.41V8.92a.42.42 0 0 1 .41-.41H5.6a.41.41 0 0 1 .41.41zM18 13.33H1a1 1 0 0 0-1 1v4.33a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1v-4.33a1 1 0 0 0-1-1zM2.32 17.41a.4.4 0 0 1-.41.4H1.4a.4.4 0 0 1-.41-.4v-1.85a.41.41 0 0 1 .41-.41h.51a.41.41 0 0 1 .41.41zm3.69 0a.41.41 0 0 1-.41.42H3.75a.42.42 0 0 1-.41-.41v-1.83a.41.41 0 0 1 .41-.41H5.6a.41.41 0 0 1 .41.41zM18 0H1a1 1 0 0 0-1 1v4.33a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zM2.32 4.07a.41.41 0 0 1-.41.41H1.4a.41.41 0 0 1-.41-.41V2.22a.41.41 0 0 1 .41-.39h.51a.41.41 0 0 1 .41.41zm3.69 0a.41.41 0 0 1-.41.41H3.75a.41.41 0 0 1-.41-.41V2.25a.41.41 0 0 1 .41-.42H5.6a.4.4 0 0 1 .41.4z"/><defs /></svg>
             <a id="a-sb">Gestão</a>
           </div></router-link>
@@ -19,8 +19,8 @@
           </div></router-link>
           </div>
           <router-link :to="{name:'Perfil'}" class="opcoes margem-b30"><div class="opcao d-flex justify-content-start align-items-center fundo-30 margem-x10 borda-r5">
-            <img :src="obterInfoUtilizador.foto" class="foto-perfil-sb borda-r5" alt="Imagem de perfil do utilizador"/>
-            <a class="limitar-texto-sb" id="a-sb">{{obterInfoUtilizador.nome + ' ' + obterInfoUtilizador.apelido}}</a>
+            <img :src="infoUtilizador.foto" class="foto-perfil-sb borda-r5" alt="Imagem de perfil do utilizador"/>
+            <a class="limitar-texto-sb" id="a-sb">{{infoUtilizador.nome + ' ' + infoUtilizador.apelido}}</a>
           </div></router-link>
       </div>
     </div>
@@ -47,9 +47,9 @@ a.router-link-exact-active, .router-link-exact-active:hover a,
 <script>
 export default {
   name: "Perfil",
-  computed:{
-    obterInfoUtilizador(){
-      return this.$store.getters.obterUtilizadorAutenticado;
+  data() {
+    return {
+      infoUtilizador: this.$store.getters.obterUtilizadorAutenticado
     }
   }
 }

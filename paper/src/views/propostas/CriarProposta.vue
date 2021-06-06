@@ -114,7 +114,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -126,7 +126,7 @@
                         type="email"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -140,7 +140,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -152,7 +152,7 @@
                         type="url"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -168,7 +168,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -180,7 +180,7 @@
                         type="email"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -194,7 +194,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -206,7 +206,7 @@
                         type="number"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -283,15 +283,15 @@ export default {
   created() {
     this.utilizador = this.obterUtilizadorAutenticado
 
-    if (this.utilizador.id_tipo == 0) {
+    if (this.utilizador.id_tipo == 1) {
       this.tiposPropostas = [this.obterTipoPropostas()[0]]
-      this.form.tipoProposta = 0
-    } else if (this.utilizador.id_tipo == 1) {
+      this.form.tipoProposta = 1
+    } else if (this.utilizador.id_tipo == 2) {
       this.tiposPropostas = this.obterTipoPropostas()
-      this.form.tipoProposta = 0
+      this.form.tipoProposta = 1
     } else {
       this.tiposPropostas = [this.obterTipoPropostas()[1]]
-      this.form.tipoProposta = 1
+      this.form.tipoProposta = 2
     }
   },
   computed: {
@@ -303,7 +303,7 @@ export default {
   methods: {
     ...mapActions(['criarProposta']),
     onChangeTipo() {
-      if(this.form.tipoProposta === 0) {
+      if(this.form.tipoProposta === 1) {
         this.form.nomeEmpresa = ''
         this.form.correioEletronicoEmpresa = ''
         this.form.moradaEmpresa = ''
@@ -316,13 +316,12 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault()
-      let propostas = localStorage.getItem('propostas') ? JSON.parse(localStorage.getItem('propostas')) : null
 
       const objProposta = {
-        id_estado: 0,
+        id_estado: 1,
         motivo: "",
         id_criador: this.utilizador.id_utilizador,
-        id_docente: this.utilizador.id_tipo === 0 ? this.utilizador.id_utilizador : null,
+        id_docente: this.utilizador.id_tipo === 1 ? this.utilizador.id_utilizador : null,
         id_tipo: this.form.tipoProposta,
         titulo: this.form.tituloProposta,
         objetivos: this.form.descricaoProposta,
@@ -333,12 +332,6 @@ export default {
         recursos: this.form.recursosNecessarios,
         data_hora: moment().format("DD/MM/YYYY HH:mm"),
         ano_letivo: "2020/2021"
-      }
-      if (propostas == null) {
-        objProposta.id_proposta = 0
-      } else {
-        const ultimaProposta = propostas[propostas.length - 1]
-        objProposta.id_proposta = ultimaProposta.id_proposta + 1
       }
       this.criarProposta(objProposta)
       this.$router.push({name: 'Propostas'})
