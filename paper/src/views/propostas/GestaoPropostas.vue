@@ -42,7 +42,7 @@
               </table>
             </div>
           </div>
-           <div class="zona-tabela-propostas" v-if="obterInfoUtilizador.id_tipo == 1">
+           <div class="zona-tabela-propostas" v-if="obterInfoUtilizador.id_tipo == 2">
             <label class="area-label fonte-24 mukta-m cor-20 padding-l8 sem-margens">Propostas inscritas pelo utilizador</label>
             <table class="tabela borda-grossa">
               <tr>

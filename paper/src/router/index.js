@@ -19,116 +19,116 @@ import Store from "../store";
 Vue.use(VueRouter);
 
 const routes = [{
-    path: "/",
-    name: "Index",
-    component: Index,
-    meta: {
-      requerAutenticacao: true,
-      redirecionarUtilizadorAtivo: true
-    }
-  },
-  {
-    path: "/autenticacao",
-    name: "Autenticacao",
-    component: Autenticacao,
-    meta: {
-      redirecionarUtilizadorAtivo: true
-    }
-  },
-  {
-    path: "/registo",
-    name: "Registo",
-    component: Registo,
-    meta: {
-      redirecionarUtilizadorAtivo: true
-    }
-  },
-  {
-    path: "/propostas",
-    name: "Propostas",
-    component: Propostas,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/gestao",
-    name: "Gestao",
-    component: Gestao,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/agenda",
-    name: "Agenda",
-    component: Agenda,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/perfil",
-    name: "Perfil",
-    component: Perfil,
-    meta: {
-      requerAutenticacao: true,
-      redirecionarDesconexao: true
-    }
-  },
-  {
-    path: "/propostas/gestao",
-    name: "GerirPropostas",
-    component: GerirPropostas,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/propostas/criar",
-    name: "CriarProposta",
-    component: CriarProposta,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/gestao/aprovacoes",
-    name: "Aprovacoes",
-    component: Aprovacoes,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/gestao/utilizadores",
-    name: "Utilizadores",
-    component: Utilizadores,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/gestao/incricoes",
-    name: "Inscricoes",
-    component: Inscricoes,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "/gestao/adicionardocentes",
-    name: "AdicionarDocentes",
-    component: AdicionarDocentes,
-    meta: {
-      requerAutenticacao: true
-    }
-  },
-  {
-    path: "*",
-    mame: "Erro",
-    component: Erro,
+  path: "/",
+  name: "Index",
+  component: Index,
+  meta: {
+    requerAutenticacao: true,
+    redirecionarUtilizadorAtivo: true
   }
+},
+{
+  path: "/autenticacao",
+  name: "Autenticacao",
+  component: Autenticacao,
+  meta: {
+    redirecionarUtilizadorAtivo: true
+  }
+},
+{
+  path: "/registo",
+  name: "Registo",
+  component: Registo,
+  meta: {
+    redirecionarUtilizadorAtivo: true
+  }
+},
+{
+  path: "/propostas",
+  name: "Propostas",
+  component: Propostas,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/gestao",
+  name: "Gestao",
+  component: Gestao,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/agenda",
+  name: "Agenda",
+  component: Agenda,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/perfil",
+  name: "Perfil",
+  component: Perfil,
+  meta: {
+    requerAutenticacao: true,
+    redirecionarDesconexao: true
+  }
+},
+{
+  path: "/propostas/gestao",
+  name: "GerirPropostas",
+  component: GerirPropostas,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/propostas/criar",
+  name: "CriarProposta",
+  component: CriarProposta,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/gestao/aprovacoes",
+  name: "Aprovacoes",
+  component: Aprovacoes,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/gestao/utilizadores",
+  name: "Utilizadores",
+  component: Utilizadores,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/gestao/incricoes",
+  name: "Inscricoes",
+  component: Inscricoes,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "/gestao/adicionardocentes",
+  name: "AdicionarDocentes",
+  component: AdicionarDocentes,
+  meta: {
+    requerAutenticacao: true
+  }
+},
+{
+  path: "*",
+  mame: "Erro",
+  component: Erro,
+}
 ];
 
 const router = new VueRouter({
@@ -137,22 +137,48 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  if(to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado){
-    if(from.name == "Perfil"){
-      next({name: 'Autenticacao'})
+router.beforeEach(async (to, from, next) => {
+  if (to.name != "Autenticacao" && to.name != "Registo") {
+    try {
+      await Store.dispatch("verifySession")
+      await Store.dispatch("fetchEstados")
+      await Store.dispatch("fetchTipoPropostas")
+      await Store.dispatch("fetchUtilizadores")
+      await Store.dispatch("fetchAgenda")
+      await Store.dispatch("fetchPropostas")
+      await Store.dispatch("fetchEmpresas")
+      await Store.dispatch("fetchEstagios")
+      await Store.dispatch("fetchInscricoes")
+      await Store.dispatch("fetchNotificacoes")
+      await Store.dispatch("fetchTemas")
+    } catch (error) {
+      next({ name: "Autenticacao" })
+    }
+  }
+  await Store.dispatch("fetchTipoUtilizadores")
+  if (to.meta.redirecionarUtilizadorAtivo && Store.getters.ativoUtilizadorAutenticado) {
+    if (from.name == "Perfil") {
+      next({ name: "Autenticacao" })
     } else {
-      next({name: 'Propostas'});
+      next({ name: "Propostas" });
     }
   }
   else {
     next();
   }
-  if(to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado){
-    next({name: 'Autenticacao'});
+  if (to.meta.requerAutenticacao && !Store.getters.ativoUtilizadorAutenticado) {
+    next({ name: "Autenticacao" });
   }
   else {
-    next();
+    if (to.name == "Gestao") {
+      if (Store.getters.obterUtilizadorAutenticado.id_tipo == 1) {
+        next({ name: "Aprovacoes" })
+      } else {
+        next({ name: "Inscricoes" });
+      }
+    } else {
+      next();
+    }
   }
 });
 
