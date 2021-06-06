@@ -129,7 +129,8 @@
                         class="botoes-redes-sociais-e-portfolio d-flex fundo-f4 borda-r5"
                         id="botoes-rsep"
                       >
-                        <a href=""
+                        <!-- Email -->
+                        <a :disabled="botoes.email" @click="alert(botoes.email)" target="_blank"
                           ><div
                             class="botao-email d-flex justify-content-center align-items-center"
                           >
@@ -153,7 +154,8 @@
                               />
                             </svg></div
                         ></a>
-                        <a href=""
+                        <!-- Facebook -->
+                        <a :disabled="botoes.facebook" :href="botoes.facebook" target="_blank"
                           ><div
                             class="botao-facebook d-flex justify-content-center align-items-center"
                           >
@@ -173,7 +175,8 @@
                               />
                             </svg></div
                         ></a>
-                        <a href=""
+                        <!-- Instagram -->
+                        <a :disabled="botoes.instagram" :href="botoes.instagram" target="_blank"
                           ><div
                             class="botao-instagram d-flex justify-content-center align-items-center"
                           >
@@ -188,7 +191,8 @@
                               />
                             </svg></div
                         ></a>
-                        <a href=""
+                        <!-- GitHub -->
+                        <a :disabled="botoes.github" :href="botoes.github" target="_blank"
                           ><div
                             class="botao-github d-flex justify-content-center align-items-center"
                           >
@@ -208,7 +212,8 @@
                               />
                             </svg></div
                         ></a>
-                        <a href=""
+                        <!-- Discord -->
+                        <a :disabled="botoes.discord" @click="alert(botoes.discord)" target="_blank"
                           ><div
                             class="botao-discord d-flex justify-content-center align-items-center"
                           >
@@ -229,8 +234,8 @@
                               />
                             </svg></div
                         ></a>
-                        <a
-                          href=""
+                        <!-- Portfólio -->
+                        <a :disabled="botoes.portfolio" :href="botoes.portfolio" target="_blank"
                           class="link-portfolio fonte-16 mukta-m cor-20"
                           ><div
                             class="botao-portfolio d-flex justify-content-center align-items-center"
@@ -350,7 +355,7 @@
                   class="cor-60 fundo-fa fonte-12 opensans-l borda-r5 sem-margens margem-t7"
                   type="text"
                   v-model="dados.discord"
-                  placeholder="Insira o nome de utilizador Discord"
+                  placeholder="Insira a sua tag do Discord (user#0000)"
                 />
                 <!-- -->
                 <label
@@ -580,8 +585,16 @@ export default {
         github: "",
         instagram: "",
         discord: "",
-        portfolio: "",
+        portfolio: ""
       },
+      botoes: {
+        email: this.$store.getters.obterUtilizadorAutenticado.correio,
+        facebook: this.$store.getters.obterUtilizadorAutenticado.facebook,
+        github: this.$store.getters.obterUtilizadorAutenticado.github,
+        instagram: this.$store.getters.obterUtilizadorAutenticado.instagram,
+        discord: this.$store.getters.obterUtilizadorAutenticado.discord,
+        portfolio: this.$store.getters.obterUtilizadorAutenticado.portfolio
+      }
     };
   },
   methods: {
@@ -608,12 +621,12 @@ export default {
       ) {
         try {
           const dados = {
-            passe: bcrypt.hashSync(this.dados.passe, 8),
-            facebook: this.dados.facebook,
-            github: this.dados.dadosgithub,
-            instagram: this.dados.instagram,
-            discord: this.dados.discord,
-            portfolio: this.dados.portfolio,
+            passe: this.dados.passe ? bcrypt.hashSync(this.dados.passe, 8) : "",
+            facebook: this.dados.facebook ? this.dados.facebook : "",
+            github: this.dados.github ? this.dados.github : "",
+            instagram: this.dados.instagram ? this.dados.instagram : "",
+            discord: this.dados.discord ? this.dados.discord : "",
+            portfolio: this.dados.portfolio ? this.dados.portfolio : "",
           };
           this.$store.dispatch("editarPerfil", dados);
           this.$router.go();
@@ -624,6 +637,11 @@ export default {
         alert("Tente novamente!");
       }
     },
+    alert(info) {
+      if (info) {
+        alert(info)
+      }
+    }
   },
   components: {
     SideBar,
@@ -633,9 +651,8 @@ export default {
       return this.$store.getters.obterUtilizadorAutenticado;
     },
     obterTabelaNotificacoes() {
-      const table = this.$store.getters.obterTabelaNotificacoes;
-      return table;
-    },
+      return this.$store.getters.obterTabelaNotificacoes;
+    }
   },
 };
 </script>
