@@ -8,7 +8,7 @@
           <!-- Área relativa a pesquisa de propostas (filtro de texto e de selecionar) -->
           <div class="area-pesquisa-propostas">
             <!-- Filtro de texto -->
-            <input class="input-pesquisa-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5" type="text" placeholder="Escreva alguma coisa...">
+            <input v-model="filter" class="input-pesquisa-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5" type="text" placeholder="Escreva alguma coisa...">
             <!-- Filtro de seleção do tipo de proposta -->
             <select v-model="select" class="selecionar-tipo-proposta fundo-fa opensans-l fonte-12 cor-60 borda-r5 margem-all4 cursor-pointer" name="selecionar-tipo-proposta">
               <option value="-1" for="selecionar-tipo-proposta">Tipo de Proposta</option>
@@ -40,7 +40,7 @@
             <!-- Área de seleção da proposta (lado esquerdo) -->
             <div class="area-selecao-proposta margem-all8 width-50">
               <!-- Cards das propostas -->
-              <b-card class="d-flex justify-content-start" v-for="(proposta) in propostas[counter]" :key="proposta.id" @click="displayProposta = proposta">
+              <b-card class="d-flex justify-content-start" v-for="(proposta) in obterCardsPropostas[counter]" :key="proposta.id" @click="displayProposta = proposta">
                 <!-- Nesta fase a imagem é por defeito -->
                 <div class="imagem-proposta d-flex justify-content-center align-items-center fundo-dd borda-fina borda-aa borda-r5 sem-margens">
                   <svg id="icone-proposta" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path class="cls-1" d="M18,0H2A2,2,0,0,0,0,2V18a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V2A2,2,0,0,0,18,0ZM11.49,15h-7a.5.5,0,0,1,0-1h7a.5.5,0,1,1,0,1Zm4-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Zm0-3H4.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"/></svg>
@@ -113,7 +113,7 @@
             </div>
           </div>
           <div class="selecionar-paginas">
-              <button v-for="(proposta, index) in propostas" :key="index" @click="counter = index" style="background: red; width: 20px; height: 20px;"></button>
+              <button v-for="(proposta, index) in obterCardsPropostas" :key="index" @click="counter = index" style="background: red; width: 20px; height: 20px;"></button>
           </div>
         </div>
       </div>
@@ -165,9 +165,14 @@ export default {
   data() {
     return {
       select: -1,
+      filter: "",
       counter: 0,
-      displayProposta: null,
-      propostas: this.$store.getters.obterCardsPropostas(this.select)
+      displayProposta: null
+    }
+  },
+  computed: {
+    obterCardsPropostas() {
+      return this.$store.getters.obterCardsPropostas(this.select, this.filter)
     }
   },
   methods: {

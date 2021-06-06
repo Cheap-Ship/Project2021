@@ -49,7 +49,7 @@
                 <td>{{inscricoes.entidade}}</td>
                 <td>{{inscricoes.tutor}}</td>
                 <td><a v-b-modal.modalDetalhes @click="obterModalVerDetalhes(inscricoes.id_proposta)">Ver detalhes</a></td>
-                <td><button @click="aprovarInscricao(inscricoes)">Aprovar</button><button @click="negarInscricao(inscricoes.id)">Negar</button></td>
+                <td><button @click="aprovarInscricao({id:inscricoes.id,tipo:inscricoes.tipo_proposta})">Aprovar</button><button @click="negarInscricao(inscricoes.id)">Negar</button></td>
               </tr>
             </table>
           </div>
@@ -60,7 +60,7 @@
               <p>Perfil Desejado: {{dadosModal[0].perfil}}</p>
               <p>Dados Relevantes: {{dadosModal[0].dados}}</p>
               <p>Recursos Necessários: {{dadosModal[0].recursos}}</p>
-              <template v-if="dadosModal[0].id_tipo == 1">
+              <template v-if="dadosModal[0].id_tipo == 2">
                 <p>Cargo Tutor: {{dadosModal[1].cargo_tutor}}</p>
                 <p>Contacto Tutor: {{dadosModal[1].contacto_tutor}}</p>
                 <p>Correio Tutor: {{dadosModal[1].correio_tutor}}</p>

@@ -114,7 +114,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -126,7 +126,7 @@
                         type="email"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -140,7 +140,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -152,7 +152,7 @@
                         type="url"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -168,7 +168,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -180,7 +180,7 @@
                         type="email"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -194,7 +194,7 @@
                         type="text"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -206,7 +206,7 @@
                         type="number"
                         placeholder=""
                         size="sm"
-                        :disabled="form.tipoProposta === 0"
+                        :disabled="form.tipoProposta === 1"
                         required
                       />
                     </div>
@@ -283,15 +283,15 @@ export default {
   created() {
     this.utilizador = this.obterUtilizadorAutenticado
 
-    if (this.utilizador.id_tipo == 0) {
+    if (this.utilizador.id_tipo == 1) {
       this.tiposPropostas = [this.obterTipoPropostas()[0]]
-      this.form.tipoProposta = 0
-    } else if (this.utilizador.id_tipo == 1) {
+      this.form.tipoProposta = 1
+    } else if (this.utilizador.id_tipo == 2) {
       this.tiposPropostas = this.obterTipoPropostas()
-      this.form.tipoProposta = 0
+      this.form.tipoProposta = 1
     } else {
       this.tiposPropostas = [this.obterTipoPropostas()[1]]
-      this.form.tipoProposta = 1
+      this.form.tipoProposta = 2
     }
   },
   computed: {
@@ -303,7 +303,7 @@ export default {
   methods: {
     ...mapActions(['criarProposta']),
     onChangeTipo() {
-      if(this.form.tipoProposta === 0) {
+      if(this.form.tipoProposta === 1) {
         this.form.nomeEmpresa = ''
         this.form.correioEletronicoEmpresa = ''
         this.form.moradaEmpresa = ''

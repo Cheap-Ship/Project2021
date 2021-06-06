@@ -24,16 +24,6 @@ export default new Vuex.Store({
   getters: {
     obterUtilizadorAutenticado: (state) => state.utilizadores.find(u => u.id_utilizador == state.utilizadorAutenticado.id_utilizador),
     ativoUtilizadorAutenticado: (state) => state.utilizadorAutenticado != "",
-    proximoIDNotificacao: (state) => {
-      return state.notificacoes.length > 0 ?
-        state.notificacoes[state.notificacoes.length - 1].id_notificacao + 1
-        : 0;
-    },
-    proximoIDInscricao: (state) => {
-      return state.inscricoes.length > 0 ?
-        state.inscricoes[state.inscricoes.length - 1].id_inscricao + 1
-        : 0;
-    },
     obterTipoUtilizador: (state) => {
       const ops = []
       const len = state.tipo_utilizadores.length;
@@ -43,6 +33,7 @@ export default new Vuex.Store({
       return ops;
     },
     obterTipoUtilizadorePorId: (state) => (id) => {
+      console.log(id)
       return state.tipo_utilizadores.find(tu => id == tu.id_tipo).tipo
     },
     obterTipoPropostas: (state) => () => {
@@ -84,7 +75,7 @@ export default new Vuex.Store({
       const tabela = [];
       state.notificacoes.forEach(notificacao => {
         try {
-          if (notificacao.id_utilizador == state.utilizadorAutenticado) {
+          if (notificacao.id_utilizador == state.utilizadorAutenticado.id_utilizador) {
             const dados = {
               id: notificacao.id_notificacao,
               id_utilizador: notificacao.id_utilizador,
@@ -99,7 +90,7 @@ export default new Vuex.Store({
           console.log()
         }
       });
-      return tabela.sort(function (a, b) { return -(a.id - b.id); })
+      return tabela.reverse();
     },
     obterTabelaUtilizadores: (state, getters) => (tipo) => {
       const tabela = [];
@@ -109,8 +100,9 @@ export default new Vuex.Store({
             id: utilizador.id_utilizador,
             nome: utilizador.nome + " " + utilizador.apelido,
             correio: utilizador.correio,
-            complementar: tipo == 'Estudante' ? utilizador.numero_estudante :
-              tipo == 'Docente' ? utilizador.cca : utilizador.nome_empresa,
+            complementar: tipo == 'Estudante' ?
+              utilizador.numero_estudante : tipo == 'Docente' ?
+                utilizador.cca : utilizador.nome_empresa,
             id_estado: utilizador.id_estado,
             cca: utilizador.cca
           }
@@ -122,14 +114,14 @@ export default new Vuex.Store({
     obterTabelaInscricoes: (state, getters) => {
       const tabela = [];
       state.inscricoes.forEach(inscricao => {
-        if (inscricao.id_estado != 1) {
+        if (inscricao.id_estado != 2) {
           const inscrito = state.utilizadores.find(u => inscricao.id_utilizador == u.id_utilizador);
           const proposta = state.propostas.find(p => inscricao.id_proposta == p.id_proposta);
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
             state.estagios.find(est => est.id_proposta == proposta.id_proposta) : null;
           const dados = {
-            id: inscricao.id_proposta,
+            id: inscricao.id_inscricao,
             nome_inscrito: inscrito.nome + " " + inscrito.apelido,
             tipo_proposta: tipo_proposta,
             entidade: estagio != null ?
@@ -138,8 +130,8 @@ export default new Vuex.Store({
             id_proposta: proposta.id_proposta
           }
           const userAut = getters.obterUtilizadorAutenticado;
-          if ((userAut.nome_empresa == null && inscricao.id_estado != 3)
-            || (userAut.nome_empresa == dados.entidade && inscricao.id_estado != 4)) {
+          if ((userAut.nome_empresa == null && inscricao.id_estado != 4)
+            || (userAut.nome_empresa == dados.entidade && inscricao.id_estado != 5)) {
             tabela.push(dados);
           }
         }
@@ -149,7 +141,7 @@ export default new Vuex.Store({
     obterTabelaPropostasCriadas: (state) => {
       const tabela = [];
       state.propostas.forEach(proposta => {
-        if (proposta.id_criador == state.utilizadorAutenticado) {
+        if (proposta.id_criador == state.utilizadorAutenticado.id_utilizador) {
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
             state.estagios.find(est => est.id_proposta == proposta.id_proposta) : null;
@@ -170,7 +162,7 @@ export default new Vuex.Store({
     obterTabelaPropostasInscritas: (state) => {
       const tabela = [];
       state.inscricoes.forEach(inscricao => {
-        if (inscricao.id_utilizador == state.utilizadorAutenticado) {
+        if (inscricao.id_utilizador == state.utilizadorAutenticado.id_utilizador) {
           const proposta = state.propostas.find(p => inscricao.id_proposta == p.id_proposta);
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
@@ -200,12 +192,19 @@ export default new Vuex.Store({
       }
       return dados;
     },
-    obterCardsPropostas: (state) => (select) => {
+    obterCardsPropostas: (state) => (select, filter) => {
       const tabela = [];
       let counter = 0, ph = [];
       const lista_invertida = state.propostas.reverse();
       lista_invertida.forEach(proposta => {
-        if (proposta.id_tipo != select) {
+        let flag = true;
+        for (let i = 0; i < filter.length; i++) {
+          if (proposta.titulo[i].toUpperCase() != filter[i].toUpperCase()) {
+            flag = false;
+            break;
+          }
+        }
+        if (proposta.id_tipo != select && flag) {
           const tipo_proposta = state.tipo_propostas.find(t => proposta.id_tipo == t.id_tipo).proposta;
           const estagio = tipo_proposta == 'Estágio' ?
             state.estagios.find(est => est.id_proposta == proposta.id_proposta) : null;
@@ -360,7 +359,7 @@ export default new Vuex.Store({
           } else {
             if (payload.id_useraut == 1) {
               inscricao.id_estado = inscricao.id_estado == 5 ? 2 : 4;
-            } else if (payload.id_useraut == 2) {
+            } else if (payload.id_useraut == 3) {
               inscricao.id_estado = inscricao.id_estado == 4 ? 2 : 5;
             }
           }
@@ -431,7 +430,7 @@ export default new Vuex.Store({
         }
       });
       const data = await response.json()
-      response.ok ? context.commit('FETCH_UTILIZADORES', data) : {}
+      response.ok ? context.commit('FETCH_ESTADOS', data) : {}
     },
     async fetchTipoUtilizadores(context) {
       const response = await fetch(API_URL + 'tipo_utilizadores', {
@@ -705,12 +704,12 @@ export default new Vuex.Store({
         }
       });
       if (response.ok) {
-        context.commit('NEGARPROPOSTA', payload);
         const notificacao = {
           id: context.state.propostas.find(p => p.id_proposta == payload).id_criador,
           tema: 2,
           texto: "A sua proposta foi negada."
         }
+        context.commit('NEGARPROPOSTA', payload);
         context.dispatch("gerarNotificacao", notificacao);
       } else {
         const data = await response.json()
@@ -772,7 +771,7 @@ export default new Vuex.Store({
       }
     },
     async removerCCA(context, payload) {
-      if (payload !== context.state.utilizadorAutenticado) {
+      if (payload !== context.state.utilizadorAutenticado.id_utilizador) {
         let newUser = context.state.utilizadores.find(u => u.id_utilizador == payload)
         newUser.cca = false
         const response = await fetch(API_URL + 'utilizadores/' + payload, {
@@ -794,9 +793,9 @@ export default new Vuex.Store({
       }
     },
     async aprovarInscricao(context, payload) {
-      let newInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
+      let newInscr = context.state.inscricoes.find(i => i.id_inscricao == payload.id)
       newInscr.id_estado = 2
-      const response = await fetch(API_URL + 'inscricoes/' + payload, {
+      const response = await fetch(API_URL + 'inscricoes/' + payload.id, {
         method: 'PUT',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -806,9 +805,9 @@ export default new Vuex.Store({
       });
       if (response.ok) {
         context.commit('APROVARINSCRICAO', {
-          id_inscricao: payload,
+          id_inscricao: payload.id,
           id_useraut: context.getters.obterUtilizadorAutenticado.id_tipo,
-          tipo: context.state.tipo_propostas.find(tp => tp.proposta == payload.tipo_proposta).id_tipo
+          id_tipo: context.state.tipo_propostas.find(tp => tp.proposta == payload.tipo).id_tipo
         });
         const notificacao = {
           id: newInscr.id_utilizador,
@@ -830,12 +829,12 @@ export default new Vuex.Store({
         }
       });
       if (response.ok) {
-        context.commit('NEGARINSCRICAO', payload);
         const notificacao = {
           id: context.state.inscricoes.find(i => i.id_inscricao == payload).id_utilizador,
           tema: 1,
           texto: "A sua inscrição foi negada."
         }
+        context.commit('NEGARINSCRICAO', payload);
         context.dispatch("gerarNotificacao", notificacao);
       } else {
         const data = await response.json()
@@ -851,12 +850,12 @@ export default new Vuex.Store({
         }
       });
       if (response.ok) {
-        context.commit('REMOVERPROPOSTA', payload);
         context.state.inscricoes.forEach(inscricao => {
           if (inscricao.id_proposta === payload) {
             context.dispatch("removerInscricao", inscricao.id_inscricao)
           }
         });
+        context.commit('REMOVERPROPOSTA', payload);
       } else {
         const data = await response.json()
         throw Error(data.message)
@@ -871,7 +870,6 @@ export default new Vuex.Store({
         }
       });
       if (response.ok) {
-        context.commit('REMOVERINSCRICAO', payload);
         const insc = context.state.inscricoes.find(i => i.id_inscricao == payload);
         for (let index = insc.preferencia; index <= 5; index++) {
           try {
@@ -881,6 +879,7 @@ export default new Vuex.Store({
             break;
           }
         }
+        context.commit('REMOVERINSCRICAO', payload);
       } else {
         const data = await response.json()
         throw Error(data.message)
@@ -888,9 +887,9 @@ export default new Vuex.Store({
     },
     async aumentarOrdem(context, payload) {
       let upInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
-      upInscr.preferencia++;
+      upInscr.preferencia--;
       let downInscr = context.state.inscricoes.find(i => i.id_utilizador == upInscr.id_utilizador && i.preferencia == upInscr.preferencia)
-      downInscr.preferencia--;
+      downInscr.preferencia++;
       const upResponse = await fetch(API_URL + 'inscricoes/' + payload, {
         method: 'PUT',
         headers: {
@@ -922,9 +921,9 @@ export default new Vuex.Store({
     },
     async diminuirOrdem(context, payload) {
       let downInscr = context.state.inscricoes.find(i => i.id_inscricao == payload)
-      downInscr.preferencia--;
+      downInscr.preferencia++;
       let upInscr = context.state.inscricoes.find(i => i.id_utilizador == downInscr.id_utilizador && i.preferencia == downInscr.preferencia)
-      upInscr.preferencia++;
+      upInscr.preferencia--;
       const downResponse = await fetch(API_URL + 'inscricoes/' + payload, {
         method: 'PUT',
         headers: {
@@ -971,16 +970,13 @@ export default new Vuex.Store({
       }
     },
     async gerarNotificacao(context, payload) {
-      // const date = new Date();
-      // const data_hora = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
       const notificacao = {
-        id_notificacao: "",
         id_utilizador: payload.id,
         id_tema: payload.tema,
         texto: payload.texto,
         data_hora: moment().format("DD/MM/YYYY HH:mm"),
       }
-      const response = await fetch(API_URL + 'propostas', {
+      const response = await fetch(API_URL + 'notificacoes', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -996,23 +992,22 @@ export default new Vuex.Store({
       }
     },
     async inscreverProposta(context, payload) {
-      const user = context.state.utilizadores.find(u => u.id_utilizador == context.state.utilizadorAutenticado)
-      if (user.id_tipo != 1) {
-        throw ("Só um estudante se pode inscrever numa proposta")
+      const user = context.state.utilizadores.find(u => u.id_utilizador == context.state.utilizadorAutenticado.id_utilizador)
+      if (user.id_tipo != 2) {
+        throw ("Só estudantes se podem inscrever em propostas")
       }
-      const inscricao = context.state.inscricoes.find(i => i.id_proposta == payload.id && i.id_utilizador == context.state.utilizadorAutenticado);
+      const inscricao = context.state.inscricoes.find(i => i.id_proposta == payload.id && i.id_utilizador == context.state.utilizadorAutenticado.id_utilizador);
       if (inscricao != undefined) {
         throw ("Já está inscrito nesta proposta")
       }
-      const preferencia = context.state.inscricoes.filter(i => i.id_utilizador == context.state.utilizadorAutenticado).length
+      const preferencia = context.state.inscricoes.filter(i => i.id_utilizador == context.state.utilizadorAutenticado.id_utilizador).length
       if (preferencia == 5) {
         throw ("Já está incrito em 5 propostas")
       }
       const dados = {
-        id_inscricao: "",
-        id_utilizador: context.state.utilizadorAutenticado,
+        id_utilizador: context.state.utilizadorAutenticado.id_utilizador,
         id_proposta: payload.id,
-        id_estado: 0,
+        id_estado: 1,
         preferencia: preferencia + 1,
         ano_letivo: "2020/2021"
       }
