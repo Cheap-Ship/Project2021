@@ -28,7 +28,7 @@ export default new Vuex.Store({
       const ops = []
       const len = state.tipo_utilizadores.length;
       for (let i = 1; i < len; i++) {
-        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].id_tipo })
+        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].tipo })
       }
       return ops;
     },
