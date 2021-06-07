@@ -325,7 +325,7 @@ export default {
         id_tipo: this.form.tipoProposta,
         titulo: this.form.tituloProposta,
         objetivos: this.form.descricaoProposta,
-        planos: this.form.planoProvisorio,
+        plano: this.form.planoProvisorio,
         resultados: this.form.resultadosEsperados,
         perfil: this.form.perfilDesejado,
         dados: this.form.outrosDados,
