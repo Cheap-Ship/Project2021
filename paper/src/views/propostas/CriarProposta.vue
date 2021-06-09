@@ -333,7 +333,22 @@ export default {
         data_hora: moment().format("DD/MM/YYYY HH:mm"),
         ano_letivo: "2020/2021"
       }
-      this.criarProposta(objProposta)
+
+      const objEstagio = objProposta.id_tipo == 1 ? {} : {
+        nome_tutor: this.form.nomeApelidoTutor,
+        contacto_tutor: this.form.contactoTelefonico,
+        cargo_tutor: this.form.cargoEmpresa,
+        correio_tutor: this.form.correioEletronicoTutor
+      }
+
+      const objEmpresa = objProposta.id_tipo == 1 ? {} : {
+        nome: this.form.nomeEmpresa,
+        correio: this.form.correioEletronicoEmpresa,
+        morada: this.form.moradaEmpresa,
+        website: this.form.website
+      }
+
+      this.criarProposta({proposta: objProposta, estagio: objEstagio, empresa: objEmpresa})
       this.$router.push({name: 'Propostas'})
     }
   }

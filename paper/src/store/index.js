@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import moment from 'moment';
 
 Vue.use(Vuex);
-const API_URL = "http://127.0.0.1:8081/";
+const API_URL = "http://api-paper.herokuapp.com/";
 
 export default new Vuex.Store({
   state: {
@@ -28,7 +28,7 @@ export default new Vuex.Store({
       const ops = []
       const len = state.tipo_utilizadores.length;
       for (let i = 1; i < len; i++) {
-        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].id_tipo })
+        ops.push({ value: state.tipo_utilizadores[i].id_tipo, text: state.tipo_utilizadores[i].tipo })
       }
       return ops;
     },
@@ -91,7 +91,7 @@ export default new Vuex.Store({
             if (tabela.length >= 15) throw "";
           }
         } catch (error) {
-          console.log()
+          alert(error)
         }
       });
       return tabela.reverse();
@@ -579,7 +579,7 @@ export default new Vuex.Store({
       if (responseUser.ok) {
 
         if (payload.empresa != null) {
-          const empresa = context.state.empresas.find((empresa) => empresa.nome === payload.empresa.nome)
+          const empresa = context.state.empresas.find((empresa) => empresa.nome.toUpperCase() === payload.empresa.nome.toUpperCase())
           if (empresa == undefined) {
             const responseCo = await fetch(API_URL + 'empresas', {
               method: 'POST',
@@ -964,13 +964,60 @@ export default new Vuex.Store({
           "Content-Type": "application/json;charset=utf-8",
           "x-access-token": context.state.utilizadorAutenticado.accessToken
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload.proposta)
       });
       const data = await response.json()
       if (response.ok) {
-        context.commit('CRIARPROPOSTA', payload);
+        context.commit('CRIARPROPOSTA', payload.proposta);
+        if (payload.proposta.id_tipo == 2) {
+          context.dispatch('criarEstagio', {id_proposta: data.location, estagio: payload.estagio, empresa: payload.empresa})
+        }
       } else {
         throw Error(data.message)
+      }
+    },
+    async criarEstagio(context, payload) {
+      const empresa = context.state.empresas.find((empresa) => empresa.nome.toUpperCase() === payload.empresa.nome.toUpperCase())
+      let id_empresa;
+      if (empresa == undefined) {
+        const responseCo = await fetch(API_URL + 'empresas', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json;charset=utf-8"
+          },
+          body: JSON.stringify(payload.empresa)
+        });
+        const dataCo = await responseCo.json()
+        if (!responseCo.ok) {
+          throw Error(dataCo.message)
+        } else {
+          id_empresa = dataCo.location;
+        }
+      } else {
+        id_empresa = empresa.id_empresa;
+      }
+
+      const estagio = {
+        id_proposta: payload.id_proposta,
+        id_empresa: id_empresa,
+        nome_tutor: payload.estagio.nome_tutor,
+        contacto_tutor: payload.estagio.contacto_tutor,
+        cargo_tutor: payload.estagio.cargo_tutor,
+        correio_tutor: payload.estagio.correio_tutor
+      }
+      const responseEst = await fetch(API_URL + 'estagios', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "x-access-token": context.state.utilizadorAutenticado.accessToken
+        },
+        body: JSON.stringify(estagio)
+      });
+      const dataEst = await responseEst.json()
+      if (responseEst.ok) {
+        context.commit('CRIARPROPOSTA', estagio);
+      } else {
+        throw Error(dataEst.message)
       }
     },
     async gerarNotificacao(context, payload) {
