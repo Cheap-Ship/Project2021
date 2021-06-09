@@ -112,8 +112,8 @@
               </div>
             </div>
           </div>
-          <div class="selecionar-paginas">
-              <button v-for="(proposta, index) in obterCardsPropostas" :key="index" @click="counter = index" style="background: red; width: 20px; height: 20px;"></button>
+          <div class="selecionar-paginas d-flex justify-content-center align-items-center">
+              <button v-for="(proposta, index) in obterCardsPropostas" :key="index" @click="counter = index" class="selecionar-pagina-btn fundo-dd borda-fina borda-70 borda-r5" aria-label="Alterar página"></button>
           </div>
         </div>
       </div>
@@ -129,7 +129,9 @@
   .imagem-proposta {height: 100%; aspect-ratio: 1/1;}
   #icone-proposta {height: 50%; fill: #aaaaaa}
   .area-de-propostas {width: 100%; height: calc(100% - 20px);}
-  .selecionar-paginas {background: grey; width: 50%; height: 12px;}
+  .selecionar-paginas {width: 50%; height: 12px;}
+  .selecionar-pagina-btn {height: 12px; width: 30px;}
+  .selecionar-pagina-btn:hover {background: #808080;}
   .area-selecao-proposta .card {border: 0.5px solid #aaaaaa; margin-bottom: 12px; border-radius: 5px; height: calc((100% - 36px) / 4);}
   .area-selecao-proposta .card:hover {background: #f9f9f9; border-color:#707070; box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.05);}
   .area-selecao-proposta .card:hover .imagem-proposta {border-color:#707070; background: #cccccc;}
