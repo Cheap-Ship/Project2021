@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import moment from 'moment';
 
 Vue.use(Vuex);
-const API_URL = "http://127.0.0.1:8081/";
+const API_URL = "http://api-paper.herokuapp.com/";
 
 export default new Vuex.Store({
   state: {
