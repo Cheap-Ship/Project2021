@@ -204,8 +204,8 @@
   .area-tabela{width: 100%; padding: 8px 8px;}
 /* Tabelas */
   .tabela {width: 100%; border-radius: 5px; border-collapse: collapse; overflow: hidden; box-shadow: 0px 0px 0.5px 0.5px rgba(20, 20, 20, 0.5)}
-  th {background-color: #d2d2d2; font-family: mukta-light; font-size: 14px; border: 1px solid #707070; height: 36px;}
-  td {background-color: #f4f4f4; font-family: opensans-light; font-size: 12px; border: 1px solid #707070; height: 36px;}
+  th {background-color: #d2d2d2; font-family: Mukta Light; font-size: 14px; border: 1px solid #707070; height: 36px;}
+  td {background-color: #f4f4f4; font-family: Open Sans Light; font-size: 12px; border: 1px solid #707070; height: 36px;}
 /* Scrollbar */
   ::-webkit-scrollbar {width: 10px;}
   ::-webkit-scrollbar-track {background: #eeeeee; border-radius: 5px; padding-right: 3px;}

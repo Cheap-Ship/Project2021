@@ -22,7 +22,7 @@
                     <div class="mukta-m fonte-16 align-left texto-bold">Título da proposta *</div>
                     <b-form-input
                       v-model="form.tituloProposta"
-                      class="width-input opensans-l fonte-12"
+                      class="titulo-proposta width-input opensans-l fonte-12"
                       type="text"
                       required
                       placeholder="Aplicação de maratonas (Obrigatório)"
@@ -42,9 +42,9 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.descricaoProposta"
-                      class="opensans-l fonte-12 width-100 height-165"
+                      class="descricao-proposta opensans-l fonte-12 width-100 height-165"
                       placeholder="Descreva sucintamente os objetivos do projeto e as principais atividades que o compõem. (Obrigatório)"
-                      required
+                      required 
                     />
                   </div>
                   <div class="sem-padding margem-l32 width-48">
@@ -52,7 +52,7 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.planoProvisorio"
-                      class="opensans-l fonte-12 width-100 height-165"
+                      class="plano-provisorio opensans-l fonte-12 width-100 height-165"
                       placeholder="Resuma o plano de trabalhos ao longo das 15 semanas do estágio/projeto. (Obrigatório)"
                       required
                     />
@@ -64,7 +64,7 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.resultadosEsperados"
-                      class="opensans-l fonte-12 height-165"
+                      class="res-esperados opensans-l fonte-12 height-165"
                       placeholder="Descreva o que pretende obter no final do estágio/projeto. (Obrigatório)"
                       required
                     />
@@ -74,7 +74,7 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.perfilDesejado"
-                      class="opensans-l fonte-12 height-165"
+                      class="perfil-desejado opensans-l fonte-12 height-165"
                       placeholder="Perfil desejado do candidato (competências, entre outras). (Obrigatório)"
                       required
                     />
@@ -86,7 +86,7 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.outrosDados"
-                      class="opensans-l fonte-12 height-165"
+                      class="outros-dados opensans-l fonte-12 height-165"
                       placeholder="Exemplo: o estudante tem que estar disponível aos fins de semana."
                     />
                   </div>
@@ -95,7 +95,7 @@
                     <b-form-textarea
                       id="textarea"
                       v-model="form.recursosNecessarios"
-                      class="opensans-l fonte-12 height-165"
+                      class="recursos-necessarios opensans-l fonte-12 height-165"
                       placeholder="Descreva necessidades específicas para o projeto como hardware e software necessário. (Obrigatório)"
                       required
                     />
@@ -110,7 +110,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Nome da Empresa *</div>
                       <b-form-input
                         v-model="form.nomeEmpresa"
-                        class="width-input opensans-l fonte-12"
+                        class="nome-empresa width-input opensans-l fonte-12"
                         type="text"
                         placeholder=""
                         size="sm"
@@ -122,7 +122,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Correio eletrónico *</div>
                       <b-form-input
                         v-model="form.correioEletronicoEmpresa"
-                        class="width-input opensans-l fonte-12"
+                        class="correio-empresa width-input opensans-l fonte-12"
                         type="email"
                         placeholder=""
                         size="sm"
@@ -136,7 +136,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Morada da Empresa *</div>
                       <b-form-input
                         v-model="form.moradaEmpresa"
-                        class="width-input opensans-l fonte-12"
+                        class="morada-empresa width-input opensans-l fonte-12"
                         type="text"
                         placeholder=""
                         size="sm"
@@ -148,7 +148,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Website *</div>
                       <b-form-input
                         v-model="form.website"
-                        class="width-input opensans-l fonte-12 height-42 borda-aa"
+                        class="website-empresa width-input opensans-l fonte-12 height-42 borda-aa"
                         type="url"
                         placeholder=""
                         size="sm"
@@ -164,7 +164,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Nome e apelido do tutor *</div>
                       <b-form-input
                         v-model="form.nomeApelidoTutor"
-                        class="width-input opensans-l fonte-12"
+                        class="nome-tutor width-input opensans-l fonte-12"
                         type="text"
                         placeholder=""
                         size="sm"
@@ -176,7 +176,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Correio eletrónico *</div>
                       <b-form-input
                         v-model="form.correioEletronicoTutor"
-                        class="width-input opensans-l fonte-12"
+                        class="correio-tutor width-input opensans-l fonte-12"
                         type="email"
                         placeholder=""
                         size="sm"
@@ -190,7 +190,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Cargo na Empresa *</div>
                       <b-form-input
                         v-model="form.cargoEmpresa"
-                        class="width-input opensans-l fonte-12"
+                        class="cargo-tutor width-input opensans-l fonte-12"
                         type="text"
                         placeholder=""
                         size="sm"
@@ -202,7 +202,7 @@
                       <div class="mukta-m fonte-14 cor-60 align-left texto-bold">Contacto telefónico *</div>
                       <b-form-input
                         v-model="form.contactoTelefonico"
-                        class="width-input opensans-l fonte-12"
+                        class="contacto-tutor width-input opensans-l fonte-12"
                         type="number"
                         placeholder=""
                         size="sm"

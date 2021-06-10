@@ -31,7 +31,7 @@
           </router-link>
         </div>
         <div class="area-conteudo-com-navegador animacao-opacidade-sombra-ligeira d-flex justify-content-start fundo-f4 borda-r5 sombra-ligeira">
-          <div>Temos que fazer com que redirecione a outra página. Se for docente passem para Aprovações, se for Entidade Externa, para inscrições.</div>
+          <div>Será redirecionado a outra página brevemente.</div>
         </div>
       </div>
     </div>

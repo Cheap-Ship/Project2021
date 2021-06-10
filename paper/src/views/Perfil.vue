@@ -395,6 +395,10 @@
   </div>
 </template>
 <style>
+.texto-desconectar {
+  background: none;
+  border: none;
+}
 .area-utilizador {
   width: 100%;
   height: auto;
